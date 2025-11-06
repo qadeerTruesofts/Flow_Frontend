@@ -16,6 +16,10 @@ interface Article {
   author_id: number | null
   is_published: boolean
   created_at: string
+  meta_title?: string | null
+  meta_description?: string | null
+  meta_keywords?: string | null
+  og_image?: string | null
 }
 
 interface User {
@@ -48,12 +52,18 @@ export default function AdminPanel() {
   const [categories, setCategories] = useState<string[]>([])
   
   // Users state
-  const [activeTab, setActiveTab] = useState<'articles' | 'users'>('articles')
+  const [activeTab, setActiveTab] = useState<'articles' | 'users' | 'settings'>('articles')
   const [users, setUsers] = useState<User[]>([])
   const [userStatistics, setUserStatistics] = useState<UserStatistics | null>(null)
   const [userSearch, setUserSearch] = useState('')
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [showUserModal, setShowUserModal] = useState(false)
+  
+  // Settings state
+  const [dailyLimit, setDailyLimit] = useState<number>(3)
+  const [dailyLimitLoading, setDailyLimitLoading] = useState(false)
+  const [dailyLimitError, setDailyLimitError] = useState<string | null>(null)
+  const [dailyLimitSuccess, setDailyLimitSuccess] = useState<string | null>(null)
   
   // Form state
   const [formData, setFormData] = useState({
@@ -61,7 +71,11 @@ export default function AdminPanel() {
     category: '',
     date: new Date().toISOString().split('T')[0],
     content: '',
-    image: null as File | null
+    image: null as File | null,
+    meta_title: '',
+    meta_description: '',
+    meta_keywords: '',
+    og_image: ''
   })
 
   useEffect(() => {
@@ -169,8 +183,89 @@ export default function AdminPanel() {
   useEffect(() => {
     if (isAuthenticated && activeTab === 'users') {
       loadUsers()
+      loadUserStatistics()
+    }
+    if (isAuthenticated && activeTab === 'settings') {
+      loadDailyLimit()
     }
   }, [isAuthenticated, activeTab, userSearch])
+  
+  const loadUserStatistics = async () => {
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) return
+      
+      const response = await fetch(`${API_BASE_URL}/api/admin/users?per_page=1`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setUserStatistics(data.statistics)
+      }
+    } catch (error) {
+      console.error('Error loading user statistics:', error)
+    }
+  }
+  
+  const loadDailyLimit = async () => {
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) return
+      
+      const response = await fetch(`${API_BASE_URL}/api/admin/settings/daily-video-limit`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        setDailyLimit(data.limit)
+      }
+    } catch (error) {
+      console.error('Error loading daily limit:', error)
+    }
+  }
+  
+  const updateDailyLimit = async () => {
+    setDailyLimitLoading(true)
+    setDailyLimitError(null)
+    setDailyLimitSuccess(null)
+    
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        setDailyLimitError('Authentication required')
+        setDailyLimitLoading(false)
+        return
+      }
+      
+      const response = await fetch(`${API_BASE_URL}/api/admin/settings/daily-video-limit`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ limit: dailyLimit })
+      })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        setDailyLimitSuccess('Daily video limit updated successfully!')
+        setTimeout(() => setDailyLimitSuccess(null), 3000)
+      } else {
+        setDailyLimitError(data.error || 'Failed to update daily limit')
+      }
+    } catch (error: any) {
+      setDailyLimitError(error.message || 'Failed to update daily limit')
+    } finally {
+      setDailyLimitLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -183,6 +278,20 @@ export default function AdminPanel() {
       formDataToSend.append('category', formData.category)
       formDataToSend.append('date', formData.date)
       formDataToSend.append('content', formData.content)
+      
+      // SEO Meta fields
+      if (formData.meta_title) {
+        formDataToSend.append('meta_title', formData.meta_title)
+      }
+      if (formData.meta_description) {
+        formDataToSend.append('meta_description', formData.meta_description)
+      }
+      if (formData.meta_keywords) {
+        formDataToSend.append('meta_keywords', formData.meta_keywords)
+      }
+      if (formData.og_image) {
+        formDataToSend.append('og_image', formData.og_image)
+      }
       
       if (formData.image) {
         formDataToSend.append('image', formData.image)
@@ -247,7 +356,11 @@ export default function AdminPanel() {
       category: article.category,
       date: article.date,
       content: article.content || '',
-      image: null
+      image: null,
+      meta_title: article.meta_title || '',
+      meta_description: article.meta_description || '',
+      meta_keywords: article.meta_keywords || '',
+      og_image: article.og_image || ''
     })
     setShowAddModal(true)
   }
@@ -258,7 +371,11 @@ export default function AdminPanel() {
       category: '',
       date: new Date().toISOString().split('T')[0],
       content: '',
-      image: null
+      image: null,
+      meta_title: '',
+      meta_description: '',
+      meta_keywords: '',
+      og_image: ''
     })
     setEditingArticle(null)
   }
@@ -334,6 +451,16 @@ export default function AdminPanel() {
               }`}
             >
               Users
+            </button>
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'settings'
+                  ? 'border-purple-500 text-purple-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              Settings
             </button>
           </nav>
         </div>
@@ -545,6 +672,76 @@ export default function AdminPanel() {
               </div>
             )}
           </>
+        )}
+
+        {activeTab === 'settings' && (
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-6 border-b border-gray-200">
+              <h2 className="text-2xl font-bold text-gray-900">Application Settings</h2>
+              <p className="text-gray-600 mt-1">Manage application-wide settings and limits</p>
+            </div>
+
+            <div className="p-6">
+              {/* Daily Video Limit Section */}
+              <div className="border-b border-gray-200 pb-6 mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Daily Video Generation Limit</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Set the maximum number of videos each user can generate per day. This limit resets at midnight.
+                </p>
+
+                {dailyLimitError && (
+                  <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-800">{dailyLimitError}</p>
+                  </div>
+                )}
+
+                {dailyLimitSuccess && (
+                  <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-sm text-green-800">{dailyLimitSuccess}</p>
+                  </div>
+                )}
+
+                <div className="flex items-center gap-4">
+                  <div className="flex-1 max-w-xs">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Videos per day
+                    </label>
+                    <input
+                      type="number"
+                      min="1"
+                      max="1000"
+                      value={dailyLimit}
+                      onChange={(e) => {
+                        const value = parseInt(e.target.value)
+                        if (!isNaN(value) && value >= 1 && value <= 1000) {
+                          setDailyLimit(value)
+                        }
+                      }}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 bg-white"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      Minimum: 1, Maximum: 1000
+                    </p>
+                  </div>
+                  <div className="flex items-end">
+                    <button
+                      onClick={updateDailyLimit}
+                      disabled={dailyLimitLoading}
+                      className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {dailyLimitLoading ? 'Saving...' : 'Save Changes'}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    <strong>Current setting:</strong> Users can generate up to <strong>{dailyLimit}</strong> video{dailyLimit !== 1 ? 's' : ''} per day.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </main>
 
@@ -765,6 +962,83 @@ export default function AdminPanel() {
                   <p className="mt-2 text-xs text-gray-500">
                     <strong>Tip:</strong> You can paste plain text here! The system will automatically detect headings (short lines, ALL CAPS, or lines ending with :), convert paragraphs, format lists (starting with - or *), and style bold (**text**) and italic (*text*). Or use HTML tags for full control.
                   </p>
+                </div>
+
+                {/* SEO Meta Fields Section */}
+                <div className="border-t pt-6 mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">SEO Meta Data</h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    These fields help improve your article's visibility in search engines and social media shares.
+                  </p>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Meta Title <span className="text-gray-500 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.meta_title}
+                        onChange={(e) => setFormData({ ...formData, meta_title: e.target.value })}
+                        placeholder="Leave empty to use article title"
+                        maxLength={500}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        Recommended: 50-60 characters. If left empty, the article title will be used.
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Meta Description <span className="text-gray-500 font-normal">(optional)</span>
+                      </label>
+                      <textarea
+                        value={formData.meta_description}
+                        onChange={(e) => setFormData({ ...formData, meta_description: e.target.value })}
+                        rows={3}
+                        placeholder="Brief description of the article for search engines"
+                        maxLength={500}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        Recommended: 150-160 characters. This appears in search engine results. If left empty, a description will be generated from the content.
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Meta Keywords <span className="text-gray-500 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.meta_keywords}
+                        onChange={(e) => setFormData({ ...formData, meta_keywords: e.target.value })}
+                        placeholder="keyword1, keyword2, keyword3"
+                        maxLength={500}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        Comma-separated keywords related to your article. Example: "AI video, video generation, artificial intelligence"
+                      </p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Open Graph Image URL <span className="text-gray-500 font-normal">(optional)</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.og_image}
+                        onChange={(e) => setFormData({ ...formData, og_image: e.target.value })}
+                        placeholder="https://example.com/image.jpg"
+                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white"
+                      />
+                      <p className="mt-1 text-xs text-gray-500">
+                        Image URL for social media sharing (Facebook, Twitter, etc.). Recommended size: 1200x630px. If left empty, the article image will be used.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex justify-end gap-4 pt-4">

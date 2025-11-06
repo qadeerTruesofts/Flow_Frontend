@@ -20,6 +20,10 @@ interface Article {
   author: string | null
   slug: string
   updated_at?: string
+  meta_title?: string | null
+  meta_description?: string | null
+  meta_keywords?: string | null
+  og_image?: string | null
 }
 
 export default function ArticleDetailPage() {
@@ -82,11 +86,11 @@ export default function ArticleDetailPage() {
   const articleSchema = article ? {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: article.title,
-    description: article.content ? article.content.replace(/<[^>]*>/g, '').substring(0, 160) : `${article.category} article about AI video generation`,
+    headline: article.meta_title || article.title,
+    description: article.meta_description || (article.content ? article.content.replace(/<[^>]*>/g, '').substring(0, 160) : `${article.category} article about AI video generation`),
     image: {
       '@type': 'ImageObject',
-      url: getImageUrl(article.image_url),
+      url: article.og_image || getImageUrl(article.image_url),
       width: 1200,
       height: 675,
     },
@@ -109,7 +113,7 @@ export default function ArticleDetailPage() {
       '@id': `${siteConfig.url}/blogs/${article.slug}`,
     },
     articleSection: article.category,
-    keywords: [article.category, 'AI Video', 'Video Generation', 'Artificial Intelligence'].join(', '),
+    keywords: article.meta_keywords || [article.category, 'AI Video', 'Video Generation', 'Artificial Intelligence'].join(', '),
   } : null
 
   // SEO: Breadcrumb structured data

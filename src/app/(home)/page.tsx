@@ -2,10 +2,10 @@
 
 import Link from 'next/link'
 import Image from 'next/image'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import { StructuredData, createFAQSchema } from '@/components/StructuredData'
-import { jsonLdSoftwareApplication } from '@/lib/seo-config'
+import { jsonLdSoftwareApplication, siteConfig } from '@/lib/seo-config'
 import SignInModal from '@/components/SignInModal'
 
 export default function Home() {
@@ -83,7 +83,7 @@ export default function Home() {
   }
 
   // FAQ Structured Data for SEO
-  const faqSchema = createFAQSchema([
+  const faqSchema = useMemo(() => createFAQSchema([
     {
       question: 'What is AI Video Generator?',
       answer: 'AI Video Generator is an advanced artificial intelligence-powered platform that transforms text descriptions and images into high-quality, professional videos in minutes. No video editing experience required.',
@@ -104,10 +104,10 @@ export default function Home() {
       question: 'Can I use the videos commercially?',
       answer: 'Yes, all videos generated with AI Video Generator can be used for commercial purposes without any watermarks or restrictions.',
     },
-  ])
+  ]), []);
 
   // Breadcrumb Schema for Homepage
-  const breadcrumbSchema = {
+  const breadcrumbSchema = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -118,10 +118,10 @@ export default function Home() {
         item: siteConfig.url,
       },
     ],
-  }
+  }), []);
 
   // VideoObject Schema for Examples
-  const videoExamplesSchema = {
+  const videoExamplesSchema = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'AI Video Generation Examples',
@@ -155,10 +155,10 @@ export default function Home() {
         contentUrl: `${siteConfig.url}/A_futuristic_robot.mp4`,
       },
     ],
-  }
+  }), []);
 
   // HowTo Schema for SEO
-  const howToSchema = {
+  const howToSchema = useMemo(() => ({
     '@context': 'https://schema.org',
     '@type': 'HowTo',
     name: 'How to Create AI Videos with FlowVideo',
@@ -183,8 +183,9 @@ export default function Home() {
         text: 'Get your professional video ready to use anywhere - no watermarks, commercial license included',
       },
     ],
-  }
+  }), []);
 
+  // Return JSX
   return (
     <>
       {/* SEO Structured Data */}
@@ -636,7 +637,6 @@ export default function Home() {
                         muted
                         playsInline
                         preload="none"
-                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         aria-label={`AI-generated video example: ${example.text}`}
                       >
@@ -788,7 +788,7 @@ export default function Home() {
                   <p className="text-slate-600 leading-relaxed" itemProp="description">
                   {feature.description}
                 </p>
-              </article>
+              </div>
             ))}
           </div>
         </div>

@@ -1,4 +1,4 @@
-// File: E:\TRUESOFTS OFFICE\FLOW VEO3\Flow_Frontend\src\app\layout.tsx
+// File: E:\TRUESOFTS OFFICE\FLow-Veo-3\Flow_Frontend\src\app\layout.tsx
 import * as entry from '../../../src/app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
