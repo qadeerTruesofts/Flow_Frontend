@@ -712,9 +712,23 @@ export default function AdminPanel() {
                       max="1000"
                       value={dailyLimit}
                       onChange={(e) => {
+                        const value = e.target.value
+                        if (value === '') {
+                          // Allow empty input temporarily for better UX
+                          return
+                        }
+                        const numValue = parseInt(value)
+                        if (!isNaN(numValue) && numValue >= 1 && numValue <= 1000) {
+                          setDailyLimit(numValue)
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // Ensure value is valid when user leaves the field
                         const value = parseInt(e.target.value)
-                        if (!isNaN(value) && value >= 1 && value <= 1000) {
-                          setDailyLimit(value)
+                        if (isNaN(value) || value < 1) {
+                          setDailyLimit(1)
+                        } else if (value > 1000) {
+                          setDailyLimit(1000)
                         }
                       }}
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 bg-white"
