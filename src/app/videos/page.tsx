@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-const API_BASE_URL = 'http://localhost:8080'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 interface Video {
   id: number
@@ -108,62 +108,64 @@ export default function VideosPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-purple-50/30 to-white">
       {/* Premium Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                FlowVideo
-              </span>
+      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
+              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">VideoAI</span>
             </Link>
+            
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
-              <Link href="/generate" className="relative group px-4 py-2 rounded-xl border-2 border-indigo-500/60 hover:border-indigo-500 transition-all font-medium text-slate-700 hover:text-indigo-600">
-                Generate Video
+            <div className="hidden md:flex items-center gap-8">
+              <Link href="/blogs" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                Blog
               </Link>
-              <Link href="/profile" className="text-slate-600 hover:text-slate-900 font-medium transition-colors">
+              <Link href="/generate" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                Text to AI Video
+              </Link>
+              <Link href="/videos" className="text-sm font-medium text-gray-900">
+                My Videos
+              </Link>
+              <Link href="/profile" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
                 Profile
               </Link>
               <button
                 onClick={handleLogout}
-                className="text-slate-600 hover:text-slate-900 font-medium transition-colors"
+                className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
               >
                 Logout
               </button>
             </div>
+            
             {/* Mobile Menu Button */}
-            <button
+            <button 
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-slate-600 hover:text-slate-900 transition-colors p-2"
-              aria-label="Toggle menu"
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
+              aria-label="Open menu"
             >
-              {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
           </div>
+          
           {/* Mobile Menu */}
           {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-slate-200">
+            <div className="md:hidden py-4 border-t border-gray-200">
               <div className="flex flex-col gap-3">
-                <Link href="/generate" className="relative group px-4 py-2 rounded-xl border-2 border-indigo-500/60 hover:border-indigo-500 transition-all font-medium text-slate-700 hover:text-indigo-600 text-center" onClick={() => setMobileMenuOpen(false)}>
-                  Generate Video
+                <Link href="/blogs" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+                  Blog
                 </Link>
-                <Link href="/profile" className="text-slate-600 hover:text-slate-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+                <Link href="/generate" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+                  Text to AI Video
+                </Link>
+                <Link href="/videos" className="text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
+                  My Videos
+                </Link>
+                <Link href="/profile" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
                   Profile
                 </Link>
                 <button
@@ -171,7 +173,7 @@ export default function VideosPage() {
                     handleLogout()
                     setMobileMenuOpen(false)
                   }}
-                  className="text-left text-slate-600 hover:text-slate-900 font-medium py-2"
+                  className="text-left text-gray-600 hover:text-gray-900 font-medium py-2"
                 >
                   Logout
                 </button>

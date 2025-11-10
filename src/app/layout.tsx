@@ -101,6 +101,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
+  const defaultOgImage = `${process.env.NEXT_PUBLIC_SITE_URL || siteConfig.url}/og-image.png`
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
   return (
     <html lang="en" className={inter.variable}>
       <head>
@@ -118,8 +120,8 @@ export default function RootLayout({
           }}
         />
         {/* Preconnect to external domains for faster loading */}
-        <link rel="preconnect" href="http://localhost:8080" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="http://localhost:8080" />
+        <link rel="preconnect" href={API_BASE_URL} crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href={API_BASE_URL} />
         <link rel="preconnect" href="https://images.unsplash.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         {/* Preload critical resources for LCP */}

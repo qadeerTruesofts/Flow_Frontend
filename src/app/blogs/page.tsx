@@ -1,13 +1,19 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useState, useEffect, useCallback } from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { StructuredData, createBreadcrumbSchema } from '@/components/StructuredData'
-import { siteConfig } from '@/lib/seo-config'
+import dynamic from 'next/dynamic'
 
-const API_BASE_URL = 'http://localhost:8080'
+// Lazy load components
+const LoginPopup = dynamic(() => import('@/components/LoginPopup'), {
+  ssr: false
+})
+const MobileMenu = dynamic(() => import('@/components/MobileMenu'), {
+  ssr: false
+})
+
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 interface Article {
   id: number
@@ -18,25 +24,74 @@ interface Article {
   image_url: string | null
   content: string | null
   author: string | null
+  meta_description?: string
+  meta_keywords?: string
 }
 
 export default function BlogPage() {
-  const router = useRouter()
   const [articles, setArticles] = useState<Article[]>([])
   const [categories, setCategories] = useState<string[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userEmail, setUserEmail] = useState('')
 
   useEffect(() => {
     loadArticles()
-    extractCategories()
+    checkAuth()
   }, [])
 
-  useEffect(() => {
-    // When category changes, articles are already filtered client-side
-    // This could be optimized to filter on backend
-  }, [selectedCategory])
+  const checkAuth = async () => {
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        setIsLoggedIn(false)
+        return
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setIsLoggedIn(true)
+        setUserEmail(data.user.email)
+      } else {
+        setIsLoggedIn(false)
+        localStorage.removeItem('access_token')
+      }
+    } catch (error) {
+      setIsLoggedIn(false)
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('access_token')
+    setIsLoggedIn(false)
+    setUserEmail('')
+  }
+
+  const openLogin = useCallback(() => {
+    setIsLoginOpen(true)
+  }, [])
+  
+  const closeLogin = useCallback(() => {
+    setIsLoginOpen(false)
+  }, [])
+  
+  const openMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(true)
+  }, [])
+  
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false)
+  }, [])
 
   const loadArticles = async () => {
     try {
@@ -63,9 +118,9 @@ export default function BlogPage() {
     setCategories(uniqueCategories.sort())
   }
 
-  const filteredArticles = selectedCategory
-    ? articles.filter(article => article.category === selectedCategory)
-    : articles
+  const filteredArticles = selectedCategory === 'all'
+    ? articles
+    : articles.filter(article => article.category === selectedCategory)
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
@@ -82,33 +137,19 @@ export default function BlogPage() {
     return `${API_BASE_URL}${imageUrl}`
   }
 
-  // Breadcrumb structured data for SEO
-  const breadcrumbSchema = createBreadcrumbSchema([
-    { name: 'Home', url: siteConfig.url },
-    { name: 'Blog', url: `${siteConfig.url}/blogs` },
-  ])
-
-  // Article list structured data
-  const articleListSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: 'AI Video Generation Articles & Guides',
-    description: 'Explore our comprehensive collection of articles about AI video generation, tutorials, and industry insights.',
-    url: `${siteConfig.url}/blogs`,
-    mainEntity: {
-      '@type': 'ItemList',
-      itemListElement: articles.map((article, index) => ({
-        '@type': 'ListItem',
-        position: index + 1,
-        url: `${siteConfig.url}/blogs/${article.slug}`,
-        name: article.title,
-      })),
-    },
+  const slugify = (text: string) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 via-purple-50/30 to-white flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mb-4" role="status" aria-label="Loading"></div>
           <p className="text-gray-600">Loading articles...</p>
@@ -118,198 +159,242 @@ export default function BlogPage() {
   }
 
   return (
-    <>
-      {/* SEO Structured Data */}
-      <StructuredData data={breadcrumbSchema} />
-      {articles.length > 0 && <StructuredData data={articleListSchema} />}
-
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
-      {/* Premium Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60" role="navigation" aria-label="Main navigation">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                FlowVideo
-              </span>
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-purple-50/30 to-white">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
+              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">VideoAI</span>
             </Link>
+            <div className="hidden md:flex items-center gap-8">
+              <Link href="/blogs" className="text-sm font-medium text-gray-900">
+                Blog
+              </Link>
+              <Link href="/generate" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                Text to AI Video
+              </Link>
+              
+              {isLoggedIn ? (
+                <>
+                  <Link href="/videos" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                    My Videos
+                  </Link>
+                  <Link href="/profile" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-sm font-semibold shadow-md">
+                      {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
+                    </div>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={openLogin}
+                    className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={openLogin}
+                    className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:scale-105 transition-all"
+                  >
+                    Get Started Free
+                  </button>
+                </>
+              )}
+            </div>
             
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={openMobileMenu}
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
+              aria-label="Open menu"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* Main Content */}
-      <main className="pt-24 md:pt-32 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">AI Video Generation Articles & Guides</h1>
-            <p className="text-lg text-gray-600">Discover expert insights, tutorials, and the latest updates in AI video technology</p>
+      {/* Hero Section */}
+      <section className="pt-32 pb-16 px-6">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="inline-block px-4 py-2 bg-purple-100 rounded-full mb-6">
+            <span className="text-sm font-semibold text-purple-600">OUR BLOG</span>
           </div>
+          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+            AI Video Generation
+            <br />
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Insights & Tutorials
+            </span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Learn everything about AI video creation, tips, tricks, and industry insights
+          </p>
+        </div>
+      </section>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-8">
-              <p className="text-red-600">{error}</p>
-            </div>
-          )}
+      {/* Category Filter */}
+      <section className="pb-12 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={() => setSelectedCategory('all')}
+              className={`px-6 py-3 rounded-full text-sm font-semibold transition-all ${
+                selectedCategory === 'all'
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                  : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+              }`}
+            >
+              All Posts ({articles.length})
+            </button>
+            {categories.map((category) => (
+              <button
+                key={category}
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-3 rounded-full text-sm font-semibold transition-all ${
+                  selectedCategory === category
+                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg'
+                    : 'bg-white text-gray-600 hover:bg-gray-50 border border-gray-200'
+                }`}
+              >
+                {category} ({articles.filter(a => a.category === category).length})
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          {/* Category Filter */}
-          {categories.length > 0 && (
-            <div className="mb-8">
-              <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/blogs"
-                  className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                    !selectedCategory
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200'
-                  }`}
-                  aria-label="Show all articles"
-                >
-                  All Articles
-                </Link>
-                {categories.map((category) => (
-                  <Link
-                    key={category}
-                    href={`/blogs/category/${encodeURIComponent(category)}`}
-                    className="px-4 py-2 rounded-full text-sm font-semibold transition-all bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-200 hover:border-indigo-300"
-                    aria-label={`View ${category} articles`}
-                  >
-                    {category}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+      {/* Blog Grid */}
+      <section className="pb-24 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredArticles.map((post) => (
+              <Link
+                key={post.id}
+                href={`/${post.slug}`}
+                className="group bg-white rounded-3xl overflow-hidden border border-gray-100 hover:border-gray-200 hover:shadow-2xl transition-all duration-300"
+              >
+                {/* Image */}
+                <div className="relative h-56 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 overflow-hidden">
+                  <Image
+                    src={getImageUrl(post.image_url)}
+                    alt={post.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  {/* Category Badge */}
+                  <div className="absolute top-4 left-4">
+                    <Link
+                      href={`/category/${slugify(post.category)}`}
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-purple-600"
+                    >
+                      {post.category}
+                    </Link>
+                  </div>
+                </div>
 
-          {/* Newest Articles Section */}
-          {filteredArticles.length > 0 && (
-            <div className="mb-12">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Latest AI Video Articles</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6" role="list">
-                {filteredArticles.slice(0, 6).map((article) => (
-                  <Link
-                    key={article.id}
-                    href={`/blogs/${article.slug}`}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:border-purple-500/30 hover:shadow-xl transition-all group"
-                  >
-                    {/* Article Image */}
-                    <div className="relative w-full aspect-video overflow-hidden">
-                      <Image
-                        src={getImageUrl(article.image_url)}
-                        alt={`${article.title} - ${article.category} Article`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                            <Link 
-                              href={`/blogs/category/${encodeURIComponent(article.category)}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-indigo-700 hover:bg-white hover:text-indigo-900 transition-colors z-10"
-                            >
-                              {article.category}
-                            </Link>
-                    </div>
-                    
-                    {/* Article Info */}
-                    <div className="p-6">
-                      <div className="mb-3">
-                        <time className="text-xs text-slate-500" dateTime={article.date} itemProp="datePublished">
-                          {formatDate(article.date)}
-                        </time>
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-purple-600 transition-colors">
-                        {article.title}
-                      </h3>
-                      {article.content && (
-                        <p className="text-gray-600 text-sm line-clamp-3">
-                          {article.content.replace(/<[^>]*>/g, '').substring(0, 150)}...
-                        </p>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+                {/* Content */}
+                <div className="p-6">
+                  {/* Meta */}
+                  <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
+                    <span>{formatDate(post.date)}</span>
+                    {post.author && (
+                      <>
+                        <span>•</span>
+                        <span>{post.author}</span>
+                      </>
+                    )}
+                  </div>
 
-          {/* All Articles Grid */}
-          {filteredArticles.length > 6 && (
-            <div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-6">All Articles</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredArticles.slice(6).map((article) => (
-                  <Link
-                    key={article.id}
-                    href={`/blogs/${article.slug}`}
-                    className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:border-purple-500/30 hover:shadow-xl transition-all group"
-                  >
-                    {/* Article Image */}
-                    <div className="relative w-full aspect-video overflow-hidden">
-                      <Image
-                        src={getImageUrl(article.image_url)}
-                        alt={`${article.title} - ${article.category} Article`}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                            <Link 
-                              href={`/blogs/category/${encodeURIComponent(article.category)}`}
-                              onClick={(e) => e.stopPropagation()}
-                              className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-indigo-700 hover:bg-white hover:text-indigo-900 transition-colors z-10"
-                            >
-                              {article.category}
-                            </Link>
-                    </div>
-                    
-                    {/* Article Info */}
-                    <div className="p-6">
-                      <div className="mb-3">
-                        <time className="text-xs text-slate-500" dateTime={article.date} itemProp="datePublished">
-                          {formatDate(article.date)}
-                        </time>
-                      </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-purple-600 transition-colors">
-                        {article.title}
-                      </h3>
-                      {article.content && (
-                        <p className="text-gray-600 text-sm line-clamp-3">
-                          {article.content.replace(/<[^>]*>/g, '').substring(0, 150)}...
-                        </p>
-                      )}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
+                  {/* Title */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                    {post.title}
+                  </h3>
+
+                  {/* Excerpt */}
+                  {post.content && (
+                    <p className="text-gray-600 line-clamp-2">
+                      {post.content.replace(/<[^>]*>/g, '').substring(0, 150)}...
+                    </p>
+                  )}
+                </div>
+              </Link>
+            ))}
+          </div>
 
           {/* No Articles Found */}
           {filteredArticles.length === 0 && !loading && (
-            <div className="bg-white rounded-2xl shadow-lg p-12 text-center border border-gray-200">
+            <div className="bg-white rounded-3xl shadow-lg p-12 text-center border border-gray-200">
               <svg className="w-24 h-24 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <h3 className="text-xl font-bold text-gray-900 mb-2">No Articles Found</h3>
               <p className="text-gray-600">
-                {selectedCategory ? `No articles found in category "${selectedCategory}"` : 'No articles available yet'}
+                {selectedCategory !== 'all' ? `No articles found in category "${selectedCategory}"` : 'No articles available yet'}
               </p>
             </div>
           )}
         </div>
-      </main>
-      </div>
+      </section>
 
-    </>
+      {/* CTA Section */}
+      <section className="py-20 px-6 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Ready to Create Your Own AI Videos?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8">
+            Start generating professional videos in seconds
+          </p>
+          <Link
+            href="/generate"
+            className="inline-flex items-center gap-3 px-10 py-5 bg-white text-gray-900 rounded-2xl text-lg font-bold hover:bg-gray-50 transition-all shadow-2xl hover:scale-105"
+          >
+            Generate Free Video
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </Link>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 px-6 bg-gray-900 text-gray-400">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg" />
+            <span className="text-lg font-bold text-white">VideoAI</span>
+          </div>
+          <p className="text-sm">&copy; 2025 VideoAI. All rights reserved.</p>
+        </div>
+      </footer>
+
+      {/* Login Popup */}
+      <LoginPopup isOpen={isLoginOpen} onClose={closeLogin} />
+      
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={isMobileMenuOpen} 
+        onClose={closeMobileMenu} 
+        onOpenLogin={openLogin}
+        isLoggedIn={isLoggedIn}
+        userEmail={userEmail}
+        onLogout={handleLogout}
+      />
+    </div>
   )
 }
-

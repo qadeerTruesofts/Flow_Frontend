@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+
 interface SignInModalProps {
   isOpen: boolean
   onClose: () => void
@@ -90,7 +92,7 @@ export default function SignInModal({ isOpen, onClose, onSignInSuccess, initialM
     
     try {
       // Send ID token to backend
-      const backendResponse = await fetch('http://localhost:8080/api/auth/google', {
+      const backendResponse = await fetch(`${API_BASE_URL}/api/auth/google`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -192,7 +194,7 @@ export default function SignInModal({ isOpen, onClose, onSignInSuccess, initialM
       }
 
       // Call signup API
-      const response = await fetch('http://localhost:8080/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -232,7 +234,7 @@ export default function SignInModal({ isOpen, onClose, onSignInSuccess, initialM
     
     try {
       // Call login API
-      const response = await fetch('http://localhost:8080/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

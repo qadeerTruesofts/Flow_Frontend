@@ -6,7 +6,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import SignInModal from '@/components/SignInModal'
 
 // Backend API URL - change this to your backend server URL
-const API_BASE_URL = 'http://localhost:8080'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
 export default function GeneratePage() {
   const searchParams = useSearchParams()
