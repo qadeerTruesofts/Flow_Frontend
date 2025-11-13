@@ -126,9 +126,17 @@ export default function BlogPage() {
     const date = new Date(dateString)
     return date.toLocaleDateString('en-US', {
       year: 'numeric',
-      month: 'long',
+      month: 'short',
       day: 'numeric'
     })
+  }
+
+  const calculateReadTime = (content: string | null) => {
+    if (!content) return '5 min read'
+    const text = content.replace(/<[^>]*>/g, '') // Remove HTML tags
+    const words = text.split(/\s+/).length
+    const minutes = Math.ceil(words / 200) // Average reading speed: 200 words per minute
+    return `${minutes} min read`
   }
 
   const getImageUrl = (imageUrl: string | null) => {
@@ -287,23 +295,26 @@ export default function BlogPage() {
               >
                 {/* Image */}
                 <div className="relative h-56 bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 overflow-hidden">
-                  <Image
-                    src={getImageUrl(post.image_url)}
-                    alt={post.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+                  {post.image_url ? (
+                    <Image
+                      src={getImageUrl(post.image_url)}
+                      alt={post.title}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <svg className="w-20 h-20 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
                   {/* Category Badge */}
                   <div className="absolute top-4 left-4">
-                    <Link
-                      href={`/category/${slugify(post.category)}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-purple-600"
-                    >
+                    <span className="px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-semibold text-purple-600">
                       {post.category}
-                    </Link>
+                    </span>
                   </div>
                 </div>
 
@@ -312,12 +323,8 @@ export default function BlogPage() {
                   {/* Meta */}
                   <div className="flex items-center gap-4 text-sm text-gray-500 mb-3">
                     <span>{formatDate(post.date)}</span>
-                    {post.author && (
-                      <>
-                        <span>•</span>
-                        <span>{post.author}</span>
-                      </>
-                    )}
+                    <span>•</span>
+                    <span>{calculateReadTime(post.content)}</span>
                   </div>
 
                   {/* Title */}
@@ -328,7 +335,7 @@ export default function BlogPage() {
                   {/* Excerpt */}
                   {post.content && (
                     <p className="text-gray-600 line-clamp-2">
-                      {post.content.replace(/<[^>]*>/g, '').substring(0, 150)}...
+                      {post.content.replace(/<[^>]*>/g, '').substring(0, 100)}...
                     </p>
                   )}
                 </div>

@@ -2,8 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+
+// Lazy load MobileMenu component
+const MobileMenu = dynamic(() => import('@/components/MobileMenu'), {
+  ssr: false
+})
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
@@ -150,7 +155,7 @@ export default function ProfilePage() {
             
             {/* Mobile Menu Button */}
             <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => setMobileMenuOpen(true)}
               className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
               aria-label="Open menu"
             >
@@ -159,37 +164,18 @@ export default function ProfilePage() {
               </svg>
             </button>
           </div>
-          
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-gray-200">
-              <div className="flex flex-col gap-3">
-                <Link href="/blogs" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  Blog
-                </Link>
-                <Link href="/generate" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  Text to AI Video
-                </Link>
-                <Link href="/videos" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  My Videos
-                </Link>
-                <Link href="/profile" className="text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout()
-                    setMobileMenuOpen(false)
-                  }}
-                  className="text-left text-gray-600 hover:text-gray-900 font-medium py-2"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={mobileMenuOpen} 
+        onClose={() => setMobileMenuOpen(false)} 
+        onOpenLogin={() => {}}
+        isLoggedIn={true}
+        userEmail={user?.email || ''}
+        onLogout={handleLogout}
+      />
 
       {/* Main Content */}
       <main className="pt-32 pb-20 px-4">
@@ -200,12 +186,11 @@ export default function ProfilePage() {
             <div className="relative bg-white border border-slate-200 rounded-3xl p-8 shadow-xl">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 {user.picture ? (
-                  <Image
+                  <img
                     src={user.picture}
                     alt={`Profile picture of ${user.name || user.email}`}
-                    width={96}
-                    height={96}
                     className="w-24 h-24 rounded-full shadow-lg object-cover"
+                    referrerPolicy="no-referrer"
                   />
                 ) : (
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold shadow-lg">

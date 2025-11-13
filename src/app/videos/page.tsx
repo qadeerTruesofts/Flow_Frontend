@@ -3,6 +3,12 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
+
+// Lazy load MobileMenu component
+const MobileMenu = dynamic(() => import('@/components/MobileMenu'), {
+  ssr: false
+})
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
@@ -22,6 +28,7 @@ export default function VideosPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [userEmail, setUserEmail] = useState('')
 
   useEffect(() => {
     checkAuth()
@@ -55,22 +62,35 @@ export default function VideosPage() {
     try {
       const token = localStorage.getItem('access_token')
       if (!token) {
+        console.log('No token found')
         setError('Please log in to view your videos')
         setLoading(false)
         return
       }
 
+      console.log('Fetching videos from:', `${API_BASE_URL}/api/profile/videos`)
       const response = await fetch(`${API_BASE_URL}/api/profile/videos`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
 
+      console.log('Response status:', response.status)
+      const data = await response.json()
+      console.log('Response data:', data)
+
       if (response.ok) {
-        const data = await response.json()
         setVideos(data.videos || [])
+        console.log('Videos loaded:', data.videos?.length || 0)
+        console.log('Video details:', data.videos?.map(v => ({
+          id: v.id,
+          status: v.status,
+          video_url: v.video_url,
+          fullUrl: v.video_url?.startsWith('http') ? v.video_url : `${API_BASE_URL}${v.video_url}`
+        })))
       } else {
-        setError('Failed to load videos')
+        setError(data.error || 'Failed to load videos')
+        console.error('Error response:', data)
       }
     } catch (error) {
       console.error('Error loading videos:', error)
@@ -142,7 +162,7 @@ export default function VideosPage() {
             
             {/* Mobile Menu Button */}
             <button 
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              onClick={() => setMobileMenuOpen(true)}
               className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
               aria-label="Open menu"
             >
@@ -151,37 +171,18 @@ export default function VideosPage() {
               </svg>
             </button>
           </div>
-          
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-gray-200">
-              <div className="flex flex-col gap-3">
-                <Link href="/blogs" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  Blog
-                </Link>
-                <Link href="/generate" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  Text to AI Video
-                </Link>
-                <Link href="/videos" className="text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  My Videos
-                </Link>
-                <Link href="/profile" className="text-gray-600 hover:text-gray-900 font-medium py-2" onClick={() => setMobileMenuOpen(false)}>
-                  Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout()
-                    setMobileMenuOpen(false)
-                  }}
-                  className="text-left text-gray-600 hover:text-gray-900 font-medium py-2"
-                >
-                  Logout
-                </button>
-              </div>
-            </div>
-          )}
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={mobileMenuOpen} 
+        onClose={() => setMobileMenuOpen(false)} 
+        onOpenLogin={() => {}}
+        isLoggedIn={true}
+        userEmail={userEmail}
+        onLogout={handleLogout}
+      />
 
       {/* Main Content */}
       <main className="pt-32 pb-20 px-4">
@@ -225,30 +226,39 @@ export default function VideosPage() {
               </div>
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {videos.map((video) => (
                 <div key={video.id} className="relative group">
                   <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-20 group-hover:opacity-30 blur transition-all" />
-                  <div className="relative bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden flex flex-col h-full">
+                  <div className="relative bg-white border border-slate-200 rounded-2xl shadow-xl overflow-hidden flex flex-col">
                     {/* Video Player Section */}
                     {video.status === 'completed' && video.video_url ? (
-                      <div className="relative w-full aspect-video bg-black">
+                      <div className="relative w-full h-56 bg-black">
                         <video
-                          src={`${API_BASE_URL}${video.video_url}`}
+                          src={video.video_url.startsWith('http') ? video.video_url : `${API_BASE_URL}${video.video_url}`}
                           controls
                           className="w-full h-full object-contain"
-                          preload="none"
-                          loading="lazy"
+                          preload="metadata"
                           playsInline
                           aria-label={`Generated video: ${video.prompt || 'AI generated video'}`}
+                          onError={(e) => {
+                            console.error('Video load error:', {
+                              videoUrl: video.video_url,
+                              fullUrl: video.video_url.startsWith('http') ? video.video_url : `${API_BASE_URL}${video.video_url}`,
+                              error: e
+                            })
+                          }}
+                          onLoadedMetadata={() => {
+                            console.log('Video loaded successfully:', video.video_url)
+                          }}
                         >
                           Your browser does not support the video tag.
                         </video>
                       </div>
                     ) : (
-                      <div className="relative w-full aspect-video bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center border-b border-slate-200">
-                        <div className="text-center p-6">
-                          <div className="inline-block w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mb-4">
+                      <div className="relative w-full h-56 bg-gradient-to-br from-slate-100 to-slate-50 flex items-center justify-center border-b border-slate-200">
+                        <div className="text-center p-4">
+                          <div className="inline-block w-16 h-16 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-2xl flex items-center justify-center mb-3">
                             {video.status === 'processing' || video.status === 'queued' ? (
                               <svg className="w-8 h-8 text-indigo-600 animate-spin" fill="none" viewBox="0 0 24 24">
                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -260,7 +270,7 @@ export default function VideosPage() {
                               </svg>
                             )}
                           </div>
-                          <p className="text-sm font-medium text-slate-600 capitalize">
+                          <p className="text-base font-medium text-slate-600 capitalize">
                             {video.status === 'processing' ? 'Generating...' : video.status}
                           </p>
                         </div>
@@ -268,25 +278,25 @@ export default function VideosPage() {
                     )}
 
                     {/* Info Section */}
-                    <div className="p-5 flex-1 flex flex-col">
+                    <div className="p-4 flex flex-col">
                       {/* Status Badge & Date */}
                       <div className="flex items-center justify-between mb-3">
-                        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                          video.status === 'completed' ? 'bg-green-100 text-green-700 border border-green-200' :
-                          video.status === 'processing' ? 'bg-blue-100 text-blue-700 border border-blue-200' :
-                          video.status === 'queued' ? 'bg-yellow-100 text-yellow-700 border border-yellow-200' :
-                          'bg-red-100 text-red-700 border border-red-200'
+                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                          video.status === 'completed' ? 'bg-green-100 text-green-700' :
+                          video.status === 'processing' ? 'bg-blue-100 text-blue-700' :
+                          video.status === 'queued' ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-red-100 text-red-700'
                         }`}>
                           {video.status === 'completed' ? '✓ Ready' : video.status}
                         </span>
-                        <span className="text-xs text-slate-500">
-                          {formatDate(video.created_at)}
+                        <span className="text-sm text-slate-500">
+                          {formatDate(video.created_at).split(',')[0]}
                         </span>
                       </div>
 
                       {/* Prompt */}
                       {video.prompt && (
-                        <p className="text-sm text-slate-600 mb-4 line-clamp-2 flex-1">
+                        <p className="text-sm text-slate-600 mb-3 line-clamp-2">
                           {video.prompt}
                         </p>
                       )}
@@ -296,9 +306,9 @@ export default function VideosPage() {
                         <a
                           href={`${API_BASE_URL}${video.video_url}`}
                           download
-                          className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/40 transition-all"
+                          className="inline-flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all text-sm"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                           </svg>
                           Download Video

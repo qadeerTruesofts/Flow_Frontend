@@ -30,6 +30,18 @@ export default function Home() {
 
   useEffect(() => {
     setMounted(true)
+    
+    // Check for access_token in URL (from Google OAuth redirect)
+    const urlParams = new URLSearchParams(window.location.search)
+    const accessToken = urlParams.get('access_token')
+    
+    if (accessToken) {
+      // Store the token
+      localStorage.setItem('access_token', accessToken)
+      // Clean up URL
+      window.history.replaceState({}, document.title, window.location.pathname)
+    }
+    
     checkAuth()
   }, [])
 

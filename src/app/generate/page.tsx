@@ -3,7 +3,15 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
-import SignInModal from '@/components/SignInModal'
+import dynamic from 'next/dynamic'
+
+// Lazy load components
+const LoginPopup = dynamic(() => import('@/components/LoginPopup'), {
+  ssr: false
+})
+const MobileMenu = dynamic(() => import('@/components/MobileMenu'), {
+  ssr: false
+})
 
 // Backend API URL - change this to your backend server URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
@@ -13,7 +21,7 @@ export default function GeneratePage() {
   const router = useRouter()
   const [prompt, setPrompt] = useState('')
   const [isGenerating, setIsGenerating] = useState(false)
-  const [showSignInModal, setShowSignInModal] = useState(false)
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -41,7 +49,7 @@ export default function GeneratePage() {
       const token = localStorage.getItem('access_token')
       if (!token) {
         setIsLoggedIn(false)
-        setShowSignInModal(true) // Show login modal if not logged in
+        setIsLoginOpen(true) // Show login modal if not logged in
         return
       }
 
@@ -55,15 +63,15 @@ export default function GeneratePage() {
         const data = await response.json()
         setIsLoggedIn(true)
         setUserEmail(data.user.email)
-        setShowSignInModal(false) // Hide modal if logged in
+        setIsLoginOpen(false) // Hide modal if logged in
       } else {
         setIsLoggedIn(false)
         localStorage.removeItem('access_token')
-        setShowSignInModal(true) // Show login modal if token invalid
+        setIsLoginOpen(true) // Show login modal if token invalid
       }
     } catch (error) {
       setIsLoggedIn(false)
-      setShowSignInModal(true) // Show login modal on error
+      setIsLoginOpen(true) // Show login modal on error
     }
   }
 
@@ -71,7 +79,7 @@ export default function GeneratePage() {
     localStorage.removeItem('access_token')
     setIsLoggedIn(false)
     setUserEmail('')
-    setShowSignInModal(true) // Show login modal after logout
+    setIsLoginOpen(true) // Show login modal after logout
   }
 
   // Poll for job status
@@ -98,8 +106,11 @@ export default function GeneratePage() {
           setIsGenerating(false)
           setError(null)
         } else if (data.status === 'failed') {
+          const errorMessage = data.error || 'Unknown error occurred during video generation'
+          console.error('Video generation failed:', errorMessage)
+          console.error('Full status data:', data)
           setStatusMessage('Generation failed')
-          setError(data.error || 'Unknown error occurred')
+          setError(errorMessage)
           setIsGenerating(false)
           setProgress(0)
         }
@@ -119,7 +130,7 @@ export default function GeneratePage() {
   const startGeneration = async () => {
     // Check if user is logged in
     if (!isLoggedIn) {
-      setShowSignInModal(true)
+      setIsLoginOpen(true)
       return
     }
 
@@ -133,7 +144,7 @@ export default function GeneratePage() {
     try {
       const token = localStorage.getItem('access_token')
       if (!token) {
-        setShowSignInModal(true)
+        setIsLoginOpen(true)
         setIsGenerating(false)
         return
       }
@@ -158,7 +169,7 @@ export default function GeneratePage() {
       if (!response.ok) {
         if (response.status === 401) {
           // Not authenticated
-          setShowSignInModal(true)
+          setIsLoginOpen(true)
           setIsGenerating(false)
           setError('Please log in to generate videos')
           return
@@ -191,7 +202,7 @@ export default function GeneratePage() {
     // Check if user is logged in
     if (!isLoggedIn) {
     // Show sign-in modal if user is not authenticated
-    setShowSignInModal(true)
+    setIsLoginOpen(true)
       return
     }
     
@@ -201,8 +212,8 @@ export default function GeneratePage() {
     }
   }
 
-  const handleSignInSuccess = () => {
-    setShowSignInModal(false)
+  const handleLoginSuccess = () => {
+    setIsLoginOpen(false)
     // Check auth again to update login state
     checkAuth()
     // Proceed with generation after sign-in
@@ -218,95 +229,87 @@ export default function GeneratePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
       {/* Premium Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                FlowVideo
-              </span>
+      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/" className="flex items-center gap-2 group">
+              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
+              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">VideoAI</span>
             </Link>
+            
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-6">
-              {isLoggedIn && (
+            <div className="hidden md:flex items-center gap-8">
+              <Link href="/blogs" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                Blog
+              </Link>
+              <Link href="/generate" className="text-sm font-medium text-gray-900">
+                Text to AI Video
+              </Link>
+              
+              {isLoggedIn ? (
                 <>
-                  <Link href="/videos" className="relative group px-4 py-2 rounded-xl border-2 border-indigo-500/60 hover:border-indigo-500 transition-all font-medium text-slate-700 hover:text-indigo-600">
+                  <Link href="/videos" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
                     My Videos
                   </Link>
-                  <Link href="/profile" className="flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold shadow-md">
-                      {userEmail.charAt(0).toUpperCase()}
-              </div>
+                  <Link href="/profile" className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white text-sm font-semibold shadow-md">
+                      {userEmail ? userEmail.charAt(0).toUpperCase() : 'U'}
+                    </div>
                   </Link>
                   <button
                     onClick={handleLogout}
-                    className="text-slate-600 hover:text-slate-900 font-medium transition-colors"
+                    className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
                   >
                     Logout
-              </button>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => setIsLoginOpen(true)}
+                    className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Login
+                  </button>
+                  <button 
+                    onClick={() => setIsLoginOpen(true)}
+                    className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:scale-105 transition-all"
+                  >
+                    Get Started Free
+                  </button>
                 </>
               )}
             </div>
+            
             {/* Mobile Menu Button */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden text-slate-600 hover:text-slate-900 transition-colors p-2"
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900 transition-colors"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              )}
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
             </button>
           </div>
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="md:hidden py-4 border-t border-slate-200">
-              <div className="flex flex-col gap-3">
-                {isLoggedIn && (
-                  <>
-                    <Link href="/videos" className="relative group px-4 py-2 rounded-xl border-2 border-indigo-500/60 hover:border-indigo-500 transition-all font-medium text-slate-700 hover:text-indigo-600 text-center" onClick={() => setMobileMenuOpen(false)}>
-                      My Videos
-                    </Link>
-                    <Link href="/profile" className="flex items-center gap-2 text-slate-600 hover:text-slate-900 py-2" onClick={() => setMobileMenuOpen(false)}>
-                      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-sm font-semibold">
-                        {userEmail.charAt(0).toUpperCase()}
-                      </div>
-                      <span>Profile</span>
-                    </Link>
-                    <button
-                      onClick={() => {
-                        handleLogout()
-                        setMobileMenuOpen(false)
-                      }}
-                      className="text-left text-slate-600 hover:text-slate-900 font-medium py-2"
-                    >
-                      Logout
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          )}
         </div>
       </nav>
+
+      {/* Mobile Menu */}
+      <MobileMenu 
+        isOpen={mobileMenuOpen} 
+        onClose={() => setMobileMenuOpen(false)} 
+        onOpenLogin={() => setIsLoginOpen(true)}
+        isLoggedIn={isLoggedIn}
+        userEmail={userEmail}
+        onLogout={handleLogout}
+      />
 
       <div className="pt-32 pb-20 px-4">
         <div className="max-w-7xl mx-auto">
           {/* Premium Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-slate-900 via-indigo-700 to-slate-900 bg-clip-text text-transparent">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black">
               Generate Your Video
             </h1>
             <p className="text-lg text-slate-600">Transform your ideas into stunning videos with AI</p>
@@ -397,11 +400,11 @@ export default function GeneratePage() {
                 disabled={isGenerating || !prompt}
                 className="relative w-full group"
               >
-                <div className="absolute -inset-0.5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl opacity-75 group-hover:opacity-100 blur transition-all" />
-                <div className={`relative w-full py-5 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl font-bold text-lg text-white transition-all flex items-center justify-center gap-3 shadow-xl border-2 border-indigo-400/50 ${
+                <div className="absolute -inset-0.5 bg-black rounded-2xl opacity-75 group-hover:opacity-100 blur transition-all" />
+                <div className={`relative w-full py-5 bg-black rounded-2xl font-bold text-lg text-white transition-all flex items-center justify-center gap-3 shadow-xl border-2 border-gray-800/50 ${
                   isGenerating || !prompt
-                    ? 'opacity-50 cursor-not-allowed border-indigo-400/30'
-                    : 'hover:scale-[1.02] shadow-indigo-500/40 hover:border-indigo-400'
+                    ? 'opacity-50 cursor-not-allowed border-gray-800/30'
+                    : 'hover:scale-[1.02] shadow-gray-900/40 hover:border-gray-800'
                 }`}>
                   {isGenerating ? (
                     <>
@@ -506,18 +509,38 @@ export default function GeneratePage() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                         </div>
-                        <p className="text-red-600 mb-2 font-semibold">Generation Failed</p>
-                        <p className="text-sm text-slate-600 mb-4">{error}</p>
-                        <button
-                          onClick={() => {
-                            setError(null)
-                            setVideoUrl(null)
-                            setProgress(0)
-                          }}
-                          className="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg text-sm font-medium transition-all"
-                        >
-                          Try Again
-                        </button>
+                        <p className="text-red-600 mb-3 font-bold text-lg">⚠️ Generation Failed</p>
+                        <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4 text-left">
+                          <p className="text-sm font-semibold text-red-700 mb-2">Error Details:</p>
+                          <p className="text-sm text-slate-700 whitespace-pre-wrap break-words">{error}</p>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                          <button
+                            onClick={() => {
+                              setError(null)
+                              setVideoUrl(null)
+                              setProgress(0)
+                              setIsGenerating(false)
+                              setStatusMessage('')
+                            }}
+                            className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:shadow-lg text-white rounded-xl text-sm font-semibold transition-all"
+                          >
+                            Try Again
+                          </button>
+                          <button
+                            onClick={() => {
+                              setError(null)
+                              setVideoUrl(null)
+                              setProgress(0)
+                              setIsGenerating(false)
+                              setStatusMessage('')
+                              setPrompt('')
+                            }}
+                            className="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 rounded-lg text-sm font-medium transition-all"
+                          >
+                            Start Over
+                          </button>
+                        </div>
                       </div>
                     ) : (
                       // Idle state
@@ -566,12 +589,52 @@ export default function GeneratePage() {
         </div>
       </div>
 
-      {/* Sign In Modal */}
-      <SignInModal
-        isOpen={showSignInModal}
-        onClose={() => setShowSignInModal(false)}
-        onSignInSuccess={handleSignInSuccess}
-      />
+      {/* Login Popup - No close button for mandatory login */}
+      {isLoginOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          {/* Backdrop - not clickable */}
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+          
+          {/* Modal */}
+          <div className="relative w-full max-w-md mx-4 bg-gradient-to-b from-gray-900 to-gray-800 rounded-3xl shadow-2xl overflow-hidden">
+            {/* Header */}
+            <div className="relative px-8 pt-8 pb-6 border-b border-gray-700">
+              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-white text-center mb-2">Login Required</h2>
+              <p className="text-gray-400 text-center text-sm">
+                Please sign in to generate AI videos
+              </p>
+            </div>
+            
+            {/* Body */}
+            <div className="p-8">
+              <button
+                onClick={() => {
+                  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+                  window.location.href = `${API_BASE_URL}/api/auth/google`
+                }}
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl group"
+              >
+                <svg className="w-6 h-6" viewBox="0 0 24 24">
+                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span>Continue with Google</span>
+              </button>
+              
+              <p className="mt-6 text-center text-xs text-gray-500">
+                By continuing, you agree to our Terms of Service and Privacy Policy
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

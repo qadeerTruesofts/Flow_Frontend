@@ -239,9 +239,9 @@ export default function BlogPostPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-purple-50/30 to-white">
+    <div className="min-h-screen bg-white">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
+      <nav className="fixed top-0 w-full z-50 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2 group">
@@ -305,79 +305,148 @@ export default function BlogPostPage() {
         </div>
       </nav>
 
-      {/* Article Content */}
-      <article className="pt-32 pb-24 px-6">
-        <div className="max-w-4xl mx-auto">
-          {/* Breadcrumb */}
-          <div className="mb-8 flex items-center gap-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-gray-900 transition-colors">Home</Link>
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
-            <Link href="/blogs" className="hover:text-gray-900 transition-colors">Blog</Link>
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-            </svg>
-            <Link href={`/category/${slugify(article.category)}`} className="hover:text-gray-900 transition-colors">{article.category}</Link>
+      {/* Breadcrumb */}
+      <div className="pt-24 pb-6 px-6 bg-gray-50 border-b border-gray-200">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Link href="/" className="hover:text-gray-900">Home</Link>
+            <span>/</span>
+            <Link href="/blogs" className="hover:text-gray-900">Blog</Link>
+            <span>/</span>
+            <Link href={`/category/${slugify(article.category)}`} className="hover:text-gray-900">{article.category}</Link>
           </div>
-
-          {/* Category Badge and Date */}
-          <div className="flex items-center gap-4 mb-6 flex-wrap">
-            <Link
-              href={`/category/${slugify(article.category)}`}
-              className="inline-block px-4 py-2 bg-purple-100 rounded-full text-sm font-semibold text-purple-600 hover:bg-purple-200 transition-colors"
-            >
-              {article.category}
-            </Link>
-            <time dateTime={article.date} className="text-sm text-gray-600">
-              {formatDate(article.date)}
-            </time>
-          </div>
-
-          {/* Title */}
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8 leading-tight">
-            {article.title}
-          </h1>
-
-          {/* Featured Image */}
-          {article.image_url && (
-            <div className="relative aspect-video mb-12 rounded-3xl overflow-hidden shadow-2xl">
-              <Image
-                src={getImageUrl(article.image_url)}
-                alt={article.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
-
-          {/* Content */}
-          <div 
-            className="prose prose-lg max-w-none 
-            prose-headings:font-bold prose-headings:mb-6 prose-headings:mt-10 first:prose-headings:mt-0
-            prose-h1:text-4xl prose-h1:bg-gradient-to-r prose-h1:from-blue-600 prose-h1:via-purple-600 prose-h1:to-pink-600 prose-h1:bg-clip-text prose-h1:text-transparent
-            prose-h2:text-3xl prose-h2:text-blue-600
-            prose-h3:text-2xl prose-h3:text-purple-600
-            prose-h4:text-xl prose-h4:text-indigo-600
-            prose-h5:text-lg prose-h5:text-blue-500
-            prose-h6:text-base prose-h6:text-purple-500
-            prose-p:text-gray-700 prose-p:text-lg prose-p:leading-relaxed prose-p:mb-6
-            prose-a:text-blue-600 prose-a:font-semibold prose-a:no-underline hover:prose-a:underline hover:prose-a:text-blue-700
-            prose-strong:text-gray-900 prose-strong:font-bold
-            prose-em:text-purple-600 prose-em:italic
-            prose-ul:list-disc prose-ul:pl-6 prose-ul:mb-6 prose-ul:space-y-2
-            prose-ol:list-decimal prose-ol:pl-6 prose-ol:mb-6 prose-ol:space-y-2
-            prose-li:text-gray-700 prose-li:text-lg prose-li:leading-relaxed
-            prose-blockquote:border-l-4 prose-blockquote:border-blue-600 prose-blockquote:pl-6 prose-blockquote:py-2 prose-blockquote:italic prose-blockquote:text-gray-600 prose-blockquote:bg-blue-50 prose-blockquote:rounded-r-lg
-            prose-code:text-blue-600 prose-code:bg-blue-50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:font-semibold prose-code:text-sm
-            prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-pre:p-6 prose-pre:rounded-xl prose-pre:overflow-x-auto
-            prose-img:rounded-2xl prose-img:shadow-2xl prose-img:my-10 prose-img:border prose-img:border-gray-200
-            prose-hr:border-gray-300 prose-hr:my-10"
-            dangerouslySetInnerHTML={{ __html: formatContent(article.content) }}
-          />
         </div>
-      </article>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid lg:grid-cols-12 gap-12">
+          {/* Sticky Sidebar - Left */}
+          <aside className="hidden lg:block lg:col-span-3">
+            <div className="sticky top-24">
+              {/* CTA Card */}
+              <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-white shadow-2xl">
+                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold mb-3">
+                  Create Your AI Video Now
+                </h3>
+                <p className="text-blue-100 mb-6 text-sm">
+                  Turn your ideas into stunning AI videos. No experience needed!
+                </p>
+                <Link
+                  href="/generate"
+                  className="block w-full py-4 bg-white text-gray-900 rounded-xl font-bold text-center hover:bg-gray-50 transition-all shadow-lg hover:scale-105"
+                >
+                  Generate Free AI Video →
+                </Link>
+                <div className="mt-4 pt-4 border-t border-white/20">
+                  <div className="flex items-center gap-2 text-sm text-blue-100">
+                    <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                    </svg>
+                    <span>No credit card required</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Share Section */}
+              <div className="mt-8 p-6 bg-gray-50 rounded-2xl">
+                <h4 className="font-semibold text-gray-900 mb-4">Share this article</h4>
+                <div className="flex gap-3">
+                  <button className="w-10 h-10 bg-white rounded-lg flex items-center justify-center hover:bg-blue-50 transition-colors">
+                    <svg className="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </button>
+                  <button className="w-10 h-10 bg-white rounded-lg flex items-center justify-center hover:bg-blue-50 transition-colors">
+                    <svg className="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                    </svg>
+                  </button>
+                  <button className="w-10 h-10 bg-white rounded-lg flex items-center justify-center hover:bg-blue-50 transition-colors">
+                    <svg className="w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          {/* Main Content */}
+          <article className="lg:col-span-9">
+            {/* Article Header */}
+            <header className="mb-12">
+              <div className="mb-6">
+                <Link
+                  href={`/category/${slugify(article.category)}`}
+                  className="inline-block px-4 py-2 bg-purple-100 text-purple-600 rounded-full text-sm font-semibold hover:bg-purple-200 transition-colors"
+                >
+                  {article.category}
+                </Link>
+              </div>
+              
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                {article.title}
+              </h1>
+
+              <div className="flex items-center gap-6 text-gray-600 pb-8 border-b border-gray-200">
+                <time className="text-sm">{formatDate(article.date)}</time>
+              </div>
+            </header>
+
+            {/* Featured Image */}
+            {article.image_url && (
+              <div className="relative mb-12 rounded-3xl overflow-hidden bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100 aspect-video">
+                <Image
+                  src={getImageUrl(article.image_url)}
+                  alt={article.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 900px"
+                />
+              </div>
+            )}
+
+            {/* Article Content */}
+            <div 
+              className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-h2:text-3xl prose-h2:mt-12 prose-h2:mb-6 prose-h3:text-2xl prose-h3:mt-8 prose-h3:mb-4 prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-6 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-ul:my-6 prose-ol:my-6 prose-li:text-gray-700 prose-li:my-2"
+              dangerouslySetInnerHTML={{ __html: formatContent(article.content) }}
+            />
+
+            {/* Mobile CTA */}
+            <div className="lg:hidden mt-12 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-white">
+              <h3 className="text-2xl font-bold mb-3">
+                Ready to Create Your AI Video?
+              </h3>
+              <p className="text-blue-100 mb-6">
+                Turn your ideas into stunning AI videos
+              </p>
+              <Link
+                href="/generate"
+                className="block w-full py-4 bg-white text-gray-900 rounded-xl font-bold text-center hover:bg-gray-50 transition-all"
+              >
+                Generate Free AI Video →
+              </Link>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      {/* Sticky Bottom CTA - Mobile */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 shadow-2xl">
+        <Link
+          href="/generate"
+          className="block w-full py-3 bg-white text-gray-900 rounded-xl font-bold text-center hover:bg-gray-50 transition-all"
+        >
+          Generate Free AI Video →
+        </Link>
+      </div>
 
       {/* Related Articles */}
       {relatedArticles.length > 0 && (
@@ -413,35 +482,48 @@ export default function BlogPostPage() {
         </section>
       )}
 
-      {/* CTA Section */}
-      <section className="py-20 px-6 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Create Your Own AI Videos?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Start generating professional videos in seconds
-          </p>
-          <Link
-            href="/generate"
-            className="inline-flex items-center gap-3 px-10 py-5 bg-white text-gray-900 rounded-2xl text-lg font-bold hover:bg-gray-50 transition-all shadow-2xl hover:scale-105"
-          >
-            Generate Free Video
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="py-12 px-6 bg-gray-900 text-gray-400">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg" />
-            <span className="text-lg font-bold text-white">VideoAI</span>
+      <footer className="mt-24 py-16 px-6 bg-gray-900 text-gray-400">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            <div>
+              <div className="flex items-center gap-2 mb-6">
+                <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl" />
+                <span className="text-lg font-bold text-white">VideoAI</span>
+              </div>
+              <p className="text-sm">
+                AI-powered video generation platform
+              </p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold text-white mb-4">Product</h3>
+              <ul className="space-y-3 text-sm">
+                <li><Link href="/generate" className="hover:text-white transition-colors">Text to AI Video</Link></li>
+                <li><Link href="/blogs" className="hover:text-white transition-colors">Blog</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold text-white mb-4">Company</h3>
+              <ul className="space-y-3 text-sm">
+                <li><Link href="#" className="hover:text-white transition-colors">About</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Contact</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold text-white mb-4">Legal</h3>
+              <ul className="space-y-3 text-sm">
+                <li><Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                <li><Link href="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              </ul>
+            </div>
           </div>
-          <p className="text-sm">&copy; 2025 VideoAI. All rights reserved.</p>
+          
+          <div className="pt-8 border-t border-gray-800 text-center text-sm">
+            <p>&copy; 2025 VideoAI - AI Video Generator. All rights reserved.</p>
+          </div>
         </div>
       </footer>
 
