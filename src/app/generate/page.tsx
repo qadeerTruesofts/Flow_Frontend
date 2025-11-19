@@ -194,6 +194,7 @@ export default function GeneratePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
+      {(!isLoggedIn) && !isLoginOpen && setIsLoginOpen(true)}
       {/* Premium Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
