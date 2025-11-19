@@ -1,4 +1,38 @@
 /** @type {import('next').NextConfig} */
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+
+const remotePatterns = [
+  {
+    protocol: 'https',
+    hostname: 'images.unsplash.com',
+    pathname: '/**',
+  },
+  {
+    protocol: 'http',
+    hostname: 'localhost',
+    port: '8080',
+    pathname: '/**',
+  },
+  {
+    protocol: 'http',
+    hostname: '128.199.85.166',
+    port: '8080',
+    pathname: '/**',
+  },
+]
+
+try {
+  const parsed = new URL(API_URL)
+  remotePatterns.push({
+    protocol: parsed.protocol.replace(':', ''),
+    hostname: parsed.hostname,
+    ...(parsed.port ? { port: parsed.port } : {}),
+    pathname: '/**',
+  })
+} catch (err) {
+  console.warn('Failed to parse NEXT_PUBLIC_API_URL for image domains:', err)
+}
+
 const nextConfig = {
   // Production optimizations
   compress: true,
@@ -6,7 +40,7 @@ const nextConfig = {
   
   // Ensure frontend always points to locally running backend unless overridden
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+    NEXT_PUBLIC_API_URL: API_URL,
   },
   
   // Image optimization
@@ -18,25 +52,7 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     unoptimized: process.env.NODE_ENV === 'development',
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '8080',
-        pathname: '/**',
-      },
-      {
-        protocol: 'http',
-        hostname: '128.199.85.166',
-        port: '8080',
-        pathname: '/**',
-      },
-    ],
+    remotePatterns,
   },
 
   // Performance optimizations
