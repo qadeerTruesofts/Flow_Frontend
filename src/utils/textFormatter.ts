@@ -39,6 +39,59 @@ export function formatPlainTextToHTML(text: string): string {
       continue
     }
 
+    // Detect Markdown headings (#, ##, etc.)
+    const markdownHeadingMatch = line.match(/^(#{1,6})\s+(.+)$/)
+    if (markdownHeadingMatch) {
+      if (inList) {
+        html += `</${listType}>\n`
+        inList = false
+      }
+      if (inParagraph) {
+        if (paragraphContent.trim()) {
+          html += `<p>${formatInlineText(paragraphContent.trim())}</p>\n`
+        }
+        paragraphContent = ''
+        inParagraph = false
+      }
+      const headingLevel = Math.min(markdownHeadingMatch[1].length + 1, 6)
+      const headingText = markdownHeadingMatch[2].trim()
+      html += `<h${headingLevel}>${escapeHTML(headingText)}</h${headingLevel}>\n`
+      continue
+    }
+
+    // Detect Markdown tables (rows that start and end with | )
+    const isTableRow = (row: string) => /^\s*\|.+\|\s*$/.test(row)
+    const isDividerRow = (row: string) => /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(row)
+    if (isTableRow(line)) {
+      if (inList) {
+        html += `</${listType}>\n`
+        inList = false
+      }
+      if (inParagraph) {
+        if (paragraphContent.trim()) {
+          html += `<p>${formatInlineText(paragraphContent.trim())}</p>\n`
+        }
+        paragraphContent = ''
+        inParagraph = false
+      }
+      
+      const tableLines: string[] = [line]
+      let j = i + 1
+      while (j < lines.length && (isTableRow(lines[j]) || isDividerRow(lines[j]) || lines[j].trim() === '')) {
+        if (lines[j].trim()) {
+          tableLines.push(lines[j])
+        }
+        j++
+      }
+      i = j - 1
+      
+      const tableHtml = buildTableFromMarkdown(tableLines)
+      if (tableHtml) {
+        html += tableHtml
+        continue
+      }
+    }
+
     // Detect bullet lists (lines starting with -, *, or •)
     if (/^[-*•]\s/.test(line)) {
       if (!inList || listType !== 'ul') {
@@ -244,7 +297,7 @@ export function formatMixedContent(text: string): string {
     const line = lines[i]
     
     // Check if line contains HTML tags (opening and closing tags)
-    const hasHTMLTags = /<(h[1-6]|p|div|ul|ol|li|strong|em|a|span|br|img|blockquote|code|pre)[^>]*>.*?<\/\1>|<(h[1-6]|p|div|ul|ol|li|strong|em|a|span|br|img|blockquote|code|pre|hr)[^>]*\/?>/gi.test(line)
+    const hasHTMLTags = /<(h[1-6]|p|div|ul|ol|li|strong|em|a|span|br|img|blockquote|code|pre|table|thead|tbody|tr|th|td)[^>]*>.*?<\/\1>|<(h[1-6]|p|div|ul|ol|li|strong|em|a|span|br|img|blockquote|code|pre|hr|table|thead|tbody|tr|th|td)[^>]*\/?>/gi.test(line)
     
     if (hasHTMLTags) {
       // First, flush any accumulated plain text
@@ -277,6 +330,62 @@ export function formatMixedContent(text: string): string {
  * Escapes HTML special characters
  */
 function escapeHTML(text: string): string {
+function buildTableFromMarkdown(rows: string[]): string {
+  if (!rows.length) return ''
+  
+  const cleanRow = (row: string) => row.trim().replace(/^\|/, '').replace(/\|$/, '')
+  const splitRow = (row: string) => cleanRow(row).split('|').map(cell => formatInlineText(escapeHTML(cell.trim())))
+  const isDividerRow = (row: string) => /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(row)
+  
+  let header: string[] = []
+  const body: string[][] = []
+  
+  if (rows.length === 1) {
+    body.push(splitRow(rows[0]))
+  } else {
+    const potentialHeader = splitRow(rows[0])
+    if (rows.length > 1 && isDividerRow(rows[1])) {
+      header = potentialHeader
+      for (let idx = 2; idx < rows.length; idx++) {
+        if (!isDividerRow(rows[idx])) {
+          body.push(splitRow(rows[idx]))
+        }
+      }
+    } else {
+      body.push(potentialHeader)
+      for (let idx = 1; idx < rows.length; idx++) {
+        if (!isDividerRow(rows[idx])) {
+          body.push(splitRow(rows[idx]))
+        }
+      }
+    }
+  }
+  
+  if (!header.length && body.length) {
+    header = body[0]
+    body.shift()
+  }
+  
+  if (!header.length) {
+    // Not a valid table
+    return ''
+  }
+  
+  const headerHtml = `<thead><tr>${header.map(cell => `<th>${cell}</th>`).join('')}</tr></thead>`
+  const bodyHtml = body.length
+    ? `<tbody>${body.map(row => `<tr>${row.map(cell => `<td>${cell}</td>`).join('')}</tr>`).join('')}</tbody>`
+    : ''
+  
+  return `
+    <div class="article-table-wrapper">
+      <table>
+        ${headerHtml}
+        ${bodyHtml}
+      </table>
+    </div>
+  `
+}
+
   if (typeof document === 'undefined') {
     // Server-side: manual escaping
     return text

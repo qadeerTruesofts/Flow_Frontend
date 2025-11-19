@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 
+const RichTextEditor = dynamic(() => import('@/components/RichTextEditor'), { ssr: false })
 interface Article {
   id: number
   title: string
@@ -72,6 +74,7 @@ export default function AdminPanel() {
     date: new Date().toISOString().split('T')[0],
     content: '',
     image: null as File | null,
+
     meta_title: '',
     meta_description: '',
     meta_keywords: '',
@@ -325,6 +328,7 @@ export default function AdminPanel() {
       alert('Error saving article')
     }
   }
+
 
   const handleDelete = async (id: number) => {
     if (!confirm('Are you sure you want to delete this article?')) return
@@ -963,18 +967,15 @@ export default function AdminPanel() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Content <span className="text-gray-500 font-normal">(HTML supported)</span>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Article Body <span className="text-gray-500 font-normal">(use toolbar to format)</span>
                   </label>
-                  <textarea
+                  <RichTextEditor
                     value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    rows={12}
-                    placeholder="You can use HTML tags to format your content. Examples:&#10;&#10;&lt;p&gt;Your paragraph text here&lt;/p&gt;&#10;&lt;h2&gt;Heading 2&lt;/h2&gt;&#10;&lt;h3&gt;Heading 3&lt;/h3&gt;&#10;&lt;ul&gt;&#10;  &lt;li&gt;List item 1&lt;/li&gt;&#10;  &lt;li&gt;List item 2&lt;/li&gt;&#10;&lt;/ul&gt;&#10;&lt;strong&gt;Bold text&lt;/strong&gt;&#10;&lt;em&gt;Italic text&lt;/em&gt;"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white font-mono text-sm"
+                    onChange={(content) => setFormData({ ...formData, content })}
                   />
                   <p className="mt-2 text-xs text-gray-500">
-                    <strong>Tip:</strong> You can paste plain text here! The system will automatically detect headings (short lines, ALL CAPS, or lines ending with :), convert paragraphs, format lists (starting with - or *), and style bold (**text**) and italic (*text*). Or use HTML tags for full control.
+                    Use the toolbar to add headings, tables, lists, etc. You can also paste rich content from Google Docs/Notion—the formatting will be preserved on the article page.
                   </p>
                 </div>
 

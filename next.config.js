@@ -4,6 +4,11 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
+  // Ensure frontend always points to locally running backend unless overridden
+  env: {
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080',
+  },
+  
   // Image optimization
   images: {
     formats: ['image/avif', 'image/webp'],

@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter, useParams } from 'next/navigation'
-import { formatPlainTextToHTML, formatMixedContent } from '@/utils/textFormatter'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import rehypeRaw from 'rehype-raw'
 import { StructuredData, createArticleSchema, createBreadcrumbSchema } from '@/components/StructuredData'
 import { siteConfig } from '@/lib/seo-config'
 
@@ -218,7 +220,7 @@ export default function ArticleDetailPage() {
                     alt={`Featured image for ${article.title} - ${article.category} article about AI video generation`}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 800px"
-                    className="object-cover"
+                    className="object-cover md:object-contain md:p-6 bg-white"
                     priority
                     itemProp="image"
                   />
@@ -230,29 +232,22 @@ export default function ArticleDetailPage() {
               </div>
 
               {/* Article Content */}
-              {article.content && (
-                <div 
-                  className="prose prose-lg max-w-none text-gray-800 mt-8"
-                  itemProp="articleBody"
-                  dangerouslySetInnerHTML={{ 
-                    __html: (() => {
-                      const content = article.content || ''
-                      
-                      // Check if content already contains HTML tags (but check for common tags, not just any tag)
-                      const hasHTMLTags = /<(h[1-6]|p|div|ul|ol|li|strong|em|a|span|br)[\s>]/i.test(content)
-                      
-                      // If it has HTML tags mixed with plain text, use formatMixedContent
-                      if (hasHTMLTags) {
-                        return formatMixedContent(content)
-                      }
-                      
-                      // If it's plain text, format it automatically
-                      return formatPlainTextToHTML(content)
-                    })()
+              {article.content ? (
+                <ReactMarkdown
+                  className="prose prose-lg max-w-none text-gray-800 mt-8 article-content"
+                  remarkPlugins={[remarkGfm]}
+                  rehypePlugins={[rehypeRaw]}
+                  components={{
+                    table: ({node, ...props}) => (
+                      <div className="article-table-wrapper">
+                        <table {...props} />
+                      </div>
+                    ),
                   }}
-                />
-              )}
-              {!article.content && (
+                >
+                  {prepareArticleContent(article.content)}
+                </ReactMarkdown>
+              ) : (
                 <div className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
                   <p className="text-gray-600 italic">No content available for this article.</p>
                 </div>
@@ -333,5 +328,22 @@ export default function ArticleDetailPage() {
       </div>
     </>
   )
+}
+
+const normalizeArticleContent = (content: string) => {
+  if (!content) return ''
+  let normalized = content.replace(/\|\s*\|/g, '|\n|')
+  normalized = normalized.replace(/(\S)\s*\|\s*-\s*-\s*-\s*\|\s*(\S)/g, '$1 |\n| --- | $2') // safeguard
+  return normalized
+}
+
+const prepareArticleContent = (content: string) => {
+  if (!content) return ''
+  let prepared = normalizeArticleContent(content)
+  prepared = prepared.replace(/\r\n/g, '\n')
+  prepared = prepared.replace(/•\s+/g, '- ')
+  prepared = prepared.replace(/\t/g, '    ')
+  prepared = prepared.replace(/([^\n])\n(?!\n)/g, '$1\n\n')
+  return prepared.trim()
 }
 

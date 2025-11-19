@@ -6,9 +6,6 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
 // Lazy load components
-const LoginPopup = dynamic(() => import('@/components/LoginPopup'), {
-  ssr: false
-})
 const MobileMenu = dynamic(() => import('@/components/MobileMenu'), {
   ssr: false
 })
@@ -49,7 +46,6 @@ export default function GeneratePage() {
       const token = localStorage.getItem('access_token')
       if (!token) {
         setIsLoggedIn(false)
-        setIsLoginOpen(true) // Show login modal if not logged in
         return
       }
 
@@ -63,15 +59,12 @@ export default function GeneratePage() {
         const data = await response.json()
         setIsLoggedIn(true)
         setUserEmail(data.user.email)
-        setIsLoginOpen(false) // Hide modal if logged in
       } else {
         setIsLoggedIn(false)
         localStorage.removeItem('access_token')
-        setIsLoginOpen(true) // Show login modal if token invalid
       }
     } catch (error) {
       setIsLoggedIn(false)
-      setIsLoginOpen(true) // Show login modal on error
     }
   }
 
@@ -79,7 +72,6 @@ export default function GeneratePage() {
     localStorage.removeItem('access_token')
     setIsLoggedIn(false)
     setUserEmail('')
-    setIsLoginOpen(true) // Show login modal after logout
   }
 
   // Poll for job status
@@ -128,12 +120,6 @@ export default function GeneratePage() {
   }, [jobId, isGenerating])
 
   const startGeneration = async () => {
-    // Check if user is logged in
-    if (!isLoggedIn) {
-      setIsLoginOpen(true)
-      return
-    }
-
     setIsGenerating(true)
     setError(null)
     setVideoUrl(null)
@@ -143,37 +129,29 @@ export default function GeneratePage() {
     
     try {
       const token = localStorage.getItem('access_token')
-      if (!token) {
-        setIsLoginOpen(true)
-        setIsGenerating(false)
-        return
-      }
-
       // Prepare request body
       const requestBody: any = {
         prompt: prompt,
       }
 
       // Call backend API to generate video
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
       const response = await fetch(`${API_BASE_URL}/api/generate`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers,
         body: JSON.stringify(requestBody),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
-        if (response.status === 401) {
-          // Not authenticated
-          setIsLoginOpen(true)
-          setIsGenerating(false)
-          setError('Please log in to generate videos')
-          return
-        } else if (response.status === 429) {
+        if (response.status === 429) {
           // Daily limit exceeded
           setError(data.message || data.error || 'Daily limit exceeded')
           setIsGenerating(false)
@@ -198,33 +176,10 @@ export default function GeneratePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    // Check if user is logged in
-    if (!isLoggedIn) {
-    // Show sign-in modal if user is not authenticated
-    setIsLoginOpen(true)
-      return
-    }
-    
-    // If logged in, start generation directly
     if (prompt) {
       startGeneration()
     }
   }
-
-  const handleLoginSuccess = () => {
-    setIsLoginOpen(false)
-    // Check auth again to update login state
-    checkAuth()
-    // Proceed with generation after sign-in
-    if (prompt) {
-      startGeneration()
-    }
-  }
-
-  // Auth check will handle showing modal if needed
-  // checkAuth is called on mount and when searchParams change
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
@@ -604,9 +559,9 @@ export default function GeneratePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-white text-center mb-2">Login Required</h2>
+              <h2 className="text-2xl font-bold text-white text-center mb-2">Sign in for extra perks</h2>
               <p className="text-gray-400 text-center text-sm">
-                Please sign in to generate AI videos
+                Logging in lets you track history, manage daily limits, and view saved videos.
               </p>
             </div>
             
