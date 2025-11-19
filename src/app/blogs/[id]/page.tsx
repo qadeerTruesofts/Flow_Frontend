@@ -7,10 +7,14 @@ import { useRouter, useParams } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
+import type { PluggableList } from 'unified'
 import { StructuredData, createArticleSchema, createBreadcrumbSchema } from '@/components/StructuredData'
 import { siteConfig } from '@/lib/seo-config'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
+
+const REMARK_PLUGINS: PluggableList = [remarkGfm as unknown as any]
+const REHYPE_PLUGINS: PluggableList = [rehypeRaw as unknown as any]
 
 interface Article {
   id: number
@@ -235,8 +239,8 @@ export default function ArticleDetailPage() {
               {article.content ? (
                 <ReactMarkdown
                   className="prose prose-lg max-w-none text-gray-800 mt-8 article-content"
-                  remarkPlugins={[remarkGfm]}
-                  rehypePlugins={[rehypeRaw]}
+                  remarkPlugins={REMARK_PLUGINS}
+                  rehypePlugins={REHYPE_PLUGINS}
                   components={{
                     table: ({node, ...props}) => (
                       <div className="article-table-wrapper">
