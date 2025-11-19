@@ -330,6 +330,21 @@ export function formatMixedContent(text: string): string {
  * Escapes HTML special characters
  */
 function escapeHTML(text: string): string {
+  if (typeof document === 'undefined') {
+    // Server-side: manual escaping
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;')
+  }
+  // Client-side: use DOM
+  const div = document.createElement('div')
+  div.textContent = text
+  return div.innerHTML
+}
+
 function buildTableFromMarkdown(rows: string[]): string {
   if (!rows.length) return ''
   
@@ -384,20 +399,5 @@ function buildTableFromMarkdown(rows: string[]): string {
       </table>
     </div>
   `
-}
-
-  if (typeof document === 'undefined') {
-    // Server-side: manual escaping
-    return text
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;')
-  }
-  // Client-side: use DOM
-  const div = document.createElement('div')
-  div.textContent = text
-  return div.innerHTML
 }
 

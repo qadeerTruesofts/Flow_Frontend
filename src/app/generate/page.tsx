@@ -120,6 +120,19 @@ export default function GeneratePage() {
   }, [jobId, isGenerating])
 
   const startGeneration = async () => {
+    if (!isLoggedIn) {
+      setError('Please sign in to generate a video.')
+      setIsLoginOpen(true)
+      return
+    }
+    const token = localStorage.getItem('access_token')
+    if (!token) {
+      setError('Please sign in to generate a video.')
+      setIsLoggedIn(false)
+      setIsLoginOpen(true)
+      return
+    }
+
     setIsGenerating(true)
     setError(null)
     setVideoUrl(null)
@@ -136,10 +149,8 @@ export default function GeneratePage() {
 
       // Call backend API to generate video
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
-      }
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
 
       const response = await fetch(`${API_BASE_URL}/api/generate`, {
