@@ -214,12 +214,12 @@ export default function ArticleDetailPage() {
 
 
                 {/* Featured Image */}
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-gray-200 shadow-2xl">
+                <div className="relative w-full md:w-3/4 lg:w-2/3 mx-auto aspect-video rounded-2xl overflow-hidden border border-gray-200 shadow-2xl">
                   <Image
                     src={getImageUrl(article.image_url)}
                     alt={`Featured image for ${article.title} - ${article.category} article about AI video generation`}
                     fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 66vw, 800px"
+                    sizes="(max-width: 768px) 90vw, (max-width: 1200px) 70vw, 720px"
                     className="object-cover md:object-contain md:p-6 bg-white"
                     priority
                     itemProp="image"
