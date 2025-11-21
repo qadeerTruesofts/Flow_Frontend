@@ -22,10 +22,7 @@ export default function GeneratePage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [userEmail, setUserEmail] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [generationSettings, setGenerationSettings] = useState({
-    
-    model: 'turbo'
-  })
+  const [aspectRatio, setAspectRatio] = useState<'portrait' | 'landscape'>('portrait')
   const [jobId, setJobId] = useState<string | null>(null)
   const [generationStatus, setGenerationStatus] = useState<string>('idle')
   const [statusMessage, setStatusMessage] = useState<string>('')
@@ -151,8 +148,9 @@ export default function GeneratePage() {
     try {
       const token = localStorage.getItem('access_token')
       // Prepare request body
-      const requestBody: any = {
-        prompt: prompt,
+      const requestBody: Record<string, any> = {
+        prompt,
+        aspect_ratio: aspectRatio,
       }
 
       // Call backend API to generate video
@@ -334,35 +332,48 @@ export default function GeneratePage() {
                   </h3>
                   
                   <div className="space-y-5">
-                    {/* Model Selection */}
                     <div>
                       <label className="block text-sm font-semibold text-slate-700 mb-3">
-                        AI Model
+                        Aspect Ratio
                       </label>
                       <div className="grid grid-cols-2 gap-3">
                         <button
-                          onClick={() => setGenerationSettings({...generationSettings, model: 'turbo'})}
+                          type="button"
+                          onClick={() => setAspectRatio('portrait')}
                           className={`p-4 rounded-xl text-left transition-all ${
-                            generationSettings.model === 'turbo'
+                            aspectRatio === 'portrait'
                               ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30'
                               : 'bg-slate-50 border border-slate-200 text-slate-700 hover:border-indigo-300'
                           }`}
                         >
-                          <div className="font-semibold mb-1">Turbo</div>
-                          <div className={`text-xs ${generationSettings.model === 'turbo' ? 'text-indigo-100' : 'text-slate-500'}`}>Fast</div>
+                          <div className="font-semibold mb-1">Portrait • 9:16</div>
+                          <div className={`text-xs ${aspectRatio === 'portrait' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Best for Shorts, Reels, TikTok
+                          </div>
                         </button>
                         <button
-                          onClick={() => setGenerationSettings({...generationSettings, model: 'pro'})}
+                          type="button"
+                          onClick={() => setAspectRatio('landscape')}
                           className={`p-4 rounded-xl text-left transition-all ${
-                            generationSettings.model === 'pro'
+                            aspectRatio === 'landscape'
                               ? 'bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/30'
                               : 'bg-slate-50 border border-slate-200 text-slate-700 hover:border-indigo-300'
                           }`}
                         >
-                          <div className="font-semibold mb-1">Pro</div>
-                          <div className={`text-xs ${generationSettings.model === 'pro' ? 'text-indigo-100' : 'text-slate-500'}`}>Quality • 2min</div>
+                          <div className="font-semibold mb-1">Landscape • 16:9</div>
+                          <div className={`text-xs ${aspectRatio === 'landscape' ? 'text-indigo-100' : 'text-slate-500'}`}>
+                            Best for YouTube, widescreen
+                          </div>
                         </button>
                       </div>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                      <p className="text-sm text-slate-600">
+                        Our new Flow bot talks directly to Google&apos;s Veo 3 API. Choose the aspect
+                        ratio here—everything else (model selection, polling, downloads) is handled
+                        automatically on the backend.
+                      </p>
                     </div>
                   </div>
                 </div>
