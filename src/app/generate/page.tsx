@@ -481,7 +481,7 @@ export default function GeneratePage() {
                           <div className="absolute inset-0 border-4 border-indigo-200 rounded-full" />
                           <div className="absolute inset-0 border-4 border-transparent border-t-indigo-600 rounded-full animate-spin" />
                           <div className="absolute inset-0 flex items-center justify-center text-sm font-bold text-indigo-600">
-                            {progress}%
+                            {Math.min(100, Math.round(progress))}%
                           </div>
                         </div>
                         <p className="text-lg font-semibold text-slate-900 mb-2">{statusMessage}</p>
