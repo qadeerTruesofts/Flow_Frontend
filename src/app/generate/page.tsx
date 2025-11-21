@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
@@ -29,6 +29,7 @@ export default function GeneratePage() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [progress, setProgress] = useState(0)
+  const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
     const urlPrompt = searchParams.get('prompt')
@@ -92,10 +93,8 @@ export default function GeneratePage() {
 
         if (data.status === 'queued') {
           setStatusMessage('Queued... waiting to start')
-          setProgress(10)
         } else if (data.status === 'processing') {
-          setStatusMessage('Generating video... this may take 2-3 minutes')
-          setProgress(50)
+          setStatusMessage('Generating video... this may take 1 minute')
         } else if (data.status === 'completed') {
           setStatusMessage('Video ready!')
           setProgress(100)
@@ -142,7 +141,7 @@ export default function GeneratePage() {
     setError(null)
     setVideoUrl(null)
     setJobId(null)
-    setProgress(5)
+    setProgress(0)
     setStatusMessage('Starting video generation...')
     
     try {
@@ -181,7 +180,7 @@ export default function GeneratePage() {
 
       setJobId(data.job_id)
       setStatusMessage('Job created, starting generation...')
-      setProgress(15)
+      setProgress(0)
 
     } catch (err: any) {
       console.error('Generation error:', err)
@@ -197,6 +196,35 @@ export default function GeneratePage() {
       startGeneration()
     }
   }
+
+  useEffect(() => {
+    if (isGenerating) {
+      const startTime = Date.now()
+      if (progressTimerRef.current) {
+        clearInterval(progressTimerRef.current)
+      }
+      progressTimerRef.current = setInterval(() => {
+        const elapsed = Date.now() - startTime
+        const duration = 60000 // 1 minute
+        const nextProgress = Math.min(100, (elapsed / duration) * 100)
+        setProgress(nextProgress)
+        if (elapsed >= duration && progressTimerRef.current) {
+          clearInterval(progressTimerRef.current)
+          progressTimerRef.current = null
+        }
+      }, 500)
+    } else if (progressTimerRef.current) {
+      clearInterval(progressTimerRef.current)
+      progressTimerRef.current = null
+    }
+
+    return () => {
+      if (progressTimerRef.current) {
+        clearInterval(progressTimerRef.current)
+        progressTimerRef.current = null
+      }
+    }
+  }, [isGenerating])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-purple-50">
@@ -348,7 +376,7 @@ export default function GeneratePage() {
                         >
                           <div className="font-semibold mb-1">Portrait • 9:16</div>
                           <div className={`text-xs ${aspectRatio === 'portrait' ? 'text-indigo-100' : 'text-slate-500'}`}>
-                            Best for Shorts, Reels, TikTok
+                           
                           </div>
                         </button>
                         <button
@@ -362,19 +390,12 @@ export default function GeneratePage() {
                         >
                           <div className="font-semibold mb-1">Landscape • 16:9</div>
                           <div className={`text-xs ${aspectRatio === 'landscape' ? 'text-indigo-100' : 'text-slate-500'}`}>
-                            Best for YouTube, widescreen
+                            
                           </div>
                         </button>
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-                      <p className="text-sm text-slate-600">
-                        Our new Flow bot talks directly to Google&apos;s Veo 3 API. Choose the aspect
-                        ratio here—everything else (model selection, polling, downloads) is handled
-                        automatically on the backend.
-                      </p>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -466,7 +487,7 @@ export default function GeneratePage() {
                         <p className="text-lg font-semibold text-slate-900 mb-2">{statusMessage}</p>
                         <p className="text-sm text-slate-600 mb-4">
                           {generationStatus === 'queued' && 'Waiting in queue...'}
-                          {generationStatus === 'processing' && 'AI is generating your video. This typically takes 2-3 minutes.'}
+                          {generationStatus === 'processing' && 'AI is generating your video. This typically takes 1 minute.'}
                         </p>
                         {jobId && (
                           <p className="text-xs text-slate-500 mb-4 font-mono">
@@ -563,7 +584,7 @@ export default function GeneratePage() {
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="text-indigo-600 mt-0.5 font-bold">•</span>
-                        <span>Generation typically takes 2-3 minutes</span>
+                        <span>Generation typically takes 1 minute</span>
                       </li>
                     </ul>
                   </div>
