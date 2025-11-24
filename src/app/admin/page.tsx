@@ -66,6 +66,16 @@ export default function AdminPanel() {
   const [dailyLimitLoading, setDailyLimitLoading] = useState(false)
   const [dailyLimitError, setDailyLimitError] = useState<string | null>(null)
   const [dailyLimitSuccess, setDailyLimitSuccess] = useState<string | null>(null)
+  const [flowEmail, setFlowEmail] = useState('')
+  const [flowPassword, setFlowPassword] = useState('')
+  const [flowProjectId, setFlowProjectId] = useState('')
+  const [flowCredsLoading, setFlowCredsLoading] = useState(false)
+  const [flowCredsSaving, setFlowCredsSaving] = useState(false)
+  const [flowCredsError, setFlowCredsError] = useState<string | null>(null)
+  const [flowCredsSuccess, setFlowCredsSuccess] = useState<string | null>(null)
+  const [flowEmailUpdatedAt, setFlowEmailUpdatedAt] = useState<string | null>(null)
+  const [flowPasswordUpdatedAt, setFlowPasswordUpdatedAt] = useState<string | null>(null)
+  const [flowProjectUpdatedAt, setFlowProjectUpdatedAt] = useState<string | null>(null)
   
   // Form state
   const [formData, setFormData] = useState({
@@ -188,10 +198,14 @@ export default function AdminPanel() {
       loadUsers()
       loadUserStatistics()
     }
+  }, [isAuthenticated, activeTab, userSearch])
+  
+  useEffect(() => {
     if (isAuthenticated && activeTab === 'settings') {
       loadDailyLimit()
+      loadFlowCredentials()
     }
-  }, [isAuthenticated, activeTab, userSearch])
+  }, [isAuthenticated, activeTab])
   
   const loadUserStatistics = async () => {
     try {
@@ -232,6 +246,41 @@ export default function AdminPanel() {
       console.error('Error loading daily limit:', error)
     }
   }
+
+  const loadFlowCredentials = async () => {
+    setFlowCredsLoading(true)
+    setFlowCredsError(null)
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        setFlowCredsError('Authentication required')
+        return
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/admin/settings/flow-credentials`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setFlowEmail(data.email || '')
+        setFlowPassword(data.password || '')
+        setFlowProjectId(data.project_id || '')
+        setFlowEmailUpdatedAt(data.email_updated_at || null)
+        setFlowPasswordUpdatedAt(data.password_updated_at || null)
+        setFlowProjectUpdatedAt(data.project_id_updated_at || null)
+      } else {
+        const data = await response.json().catch(() => ({}))
+        setFlowCredsError(data.error || 'Failed to load Flow credentials')
+      }
+    } catch (error: any) {
+      setFlowCredsError(error.message || 'Failed to load Flow credentials')
+    } finally {
+      setFlowCredsLoading(false)
+    }
+  }
   
   const updateDailyLimit = async () => {
     setDailyLimitLoading(true)
@@ -267,6 +316,52 @@ export default function AdminPanel() {
       setDailyLimitError(error.message || 'Failed to update daily limit')
     } finally {
       setDailyLimitLoading(false)
+    }
+  }
+
+  const updateFlowCredentials = async () => {
+    setFlowCredsSaving(true)
+    setFlowCredsError(null)
+    setFlowCredsSuccess(null)
+
+    try {
+      const token = localStorage.getItem('access_token')
+      if (!token) {
+        setFlowCredsError('Authentication required')
+        return
+      }
+
+      const response = await fetch(`${API_BASE_URL}/api/admin/settings/flow-credentials`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: flowEmail,
+          password: flowPassword,
+          project_id: flowProjectId
+        })
+      })
+
+      const data = await response.json().catch(() => ({}))
+
+      if (response.ok) {
+        setFlowCredsSuccess('Flow login credentials updated successfully!')
+        setFlowEmail(data.email || flowEmail)
+        setFlowPassword(data.password || flowPassword)
+        setFlowProjectId(data.project_id || flowProjectId)
+        setFlowEmailUpdatedAt(data.email_updated_at || null)
+        setFlowPasswordUpdatedAt(data.password_updated_at || null)
+        setFlowProjectUpdatedAt(data.project_id_updated_at || null)
+        setTimeout(() => setFlowCredsSuccess(null), 3000)
+      } else {
+        setFlowCredsError(data.error || 'Failed to update Flow credentials')
+      }
+    } catch (error: any) {
+      setFlowCredsError(error.message || 'Failed to update Flow credentials')
+    } finally {
+      setFlowCredsSaving(false)
     }
   }
 
@@ -756,6 +851,97 @@ export default function AdminPanel() {
                   <p className="text-sm text-blue-800">
                     <strong>Current setting:</strong> Users can generate up to <strong>{dailyLimit}</strong> video{dailyLimit !== 1 ? 's' : ''} per day.
                   </p>
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Flow Account Credentials</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  These credentials are used by the backend automation that runs <code>auto_refresh_token.py</code> to refresh Flow / Veo tokens.
+                </p>
+
+                {flowCredsError && (
+                  <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm text-red-800">{flowCredsError}</p>
+                  </div>
+                )}
+
+                {flowCredsSuccess && (
+                  <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-sm text-green-800">{flowCredsSuccess}</p>
+                  </div>
+                )}
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Flow login email
+                    </label>
+                    <input
+                      type="email"
+                      value={flowEmail}
+                      onChange={(e) => setFlowEmail(e.target.value)}
+                      disabled={flowCredsLoading}
+                      placeholder="flow-account@gmail.com"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white disabled:bg-gray-100"
+                    />
+                    {flowEmailUpdatedAt && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Updated {new Date(flowEmailUpdatedAt).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Flow login password
+                    </label>
+                    <input
+                      type="password"
+                      value={flowPassword}
+                      onChange={(e) => setFlowPassword(e.target.value)}
+                      disabled={flowCredsLoading}
+                      placeholder="••••••••"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white disabled:bg-gray-100"
+                    />
+                    {flowPasswordUpdatedAt && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Updated {new Date(flowPasswordUpdatedAt).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Flow project ID
+                    </label>
+                    <input
+                      type="text"
+                      value={flowProjectId}
+                      onChange={(e) => setFlowProjectId(e.target.value)}
+                      disabled={flowCredsLoading}
+                      placeholder="cdc80388-2528-43a8-8dfd-ea1968e33a47"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white disabled:bg-gray-100"
+                    />
+                    {flowProjectUpdatedAt && (
+                      <p className="mt-1 text-xs text-gray-500">
+                        Updated {new Date(flowProjectUpdatedAt).toLocaleString()}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="mt-4 flex items-center gap-4">
+                  <button
+                    onClick={updateFlowCredentials}
+                    disabled={flowCredsSaving || flowCredsLoading}
+                    className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {flowCredsSaving ? 'Saving...' : 'Save Flow Login'}
+                  </button>
+                  {flowCredsLoading && (
+                    <p className="text-sm text-gray-500">Loading current credentials...</p>
+                  )}
                 </div>
               </div>
             </div>

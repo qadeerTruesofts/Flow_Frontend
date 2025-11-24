@@ -20,6 +20,7 @@ export default function GeneratePage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [authChecked, setAuthChecked] = useState(false)
   const [userEmail, setUserEmail] = useState('')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [aspectRatio, setAspectRatio] = useState<'portrait' | 'landscape'>('portrait')
@@ -40,12 +41,9 @@ export default function GeneratePage() {
   }, [searchParams])
 
   useEffect(() => {
-    if (!isLoggedIn) {
-      setIsLoginOpen(true)
-    } else {
-      setIsLoginOpen(false)
-    }
-  }, [isLoggedIn])
+    if (!authChecked) return
+    setIsLoginOpen(!isLoggedIn)
+  }, [isLoggedIn, authChecked])
 
   const checkAuth = async () => {
     try {
@@ -71,6 +69,8 @@ export default function GeneratePage() {
       }
     } catch (error) {
       setIsLoggedIn(false)
+    } finally {
+      setAuthChecked(true)
     }
   }
 

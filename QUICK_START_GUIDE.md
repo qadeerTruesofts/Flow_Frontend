@@ -18,7 +18,7 @@ npm install
 Create or update `.env.local`:
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:8080
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=https://desirable-reflection-production-aa8a.up.railway.app
 ```
 
 ### 3. Start Development Server
@@ -28,7 +28,7 @@ npm run dev
 
 ### 4. Visit Your Site
 ```
-http://localhost:3000
+https://desirable-reflection-production-aa8a.up.railway.app
 ```
 
 ---
@@ -36,7 +36,7 @@ http://localhost:3000
 ## 📱 Testing the New Features
 
 ### Test Navigation
-1. Visit home page: `http://localhost:3000/`
+1. Visit home page: `https://desirable-reflection-production-aa8a.up.railway.app/`
 2. Click "Blog" in header
 3. Try category filters
 4. Click on a blog post
@@ -126,7 +126,7 @@ http://localhost:3000
 ---
 
 ### Blog Post (`/[slug]`)
-**URL Example:** `http://localhost:3000/how-to-create-stunning-ai-videos`
+**URL Example:** `https://desirable-reflection-production-aa8a.up.railway.app/how-to-create-stunning-ai-videos`
 
 **What's New:**
 - Breadcrumb navigation
@@ -144,7 +144,7 @@ http://localhost:3000
 ---
 
 ### Category Page (`/category/[slug]`)
-**URL Example:** `http://localhost:3000/category/tutorials`
+**URL Example:** `https://desirable-reflection-production-aa8a.up.railway.app/category/tutorials`
 
 **What's New:**
 - Category hero section

@@ -18,4 +18,4 @@ Allow: /generate
 
 # Sitemap location (update with your production URL)
 Sitemap: https://flowvideo.com/sitemap.xml
-Sitemap: http://localhost:3000/sitemap.xml
+Sitemap: https://desirable-reflection-production-aa8a.up.railway.app/sitemap.xml

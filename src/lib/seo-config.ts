@@ -1,10 +1,12 @@
 // SEO Configuration for AI Video Generator
 
+const DEFAULT_SITE_URL = 'https://desirable-reflection-production-aa8a.up.railway.app'
+
 export const siteConfig = {
   name: 'FlowVideo - AI Video Generator',
   description: 'Create stunning AI-powered videos in seconds. Transform your ideas into professional videos with FlowVideo\'s advanced AI video generation technology. Free to start, no credit card required. Trusted by 50,000+ creators worldwide.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || 'https://flowvideo.com',
-  ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://flowvideo.com'}/og-image.jpg`,
+  url: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL,
+  ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL}/og-image.jpg`,
   twitterHandle: '@flowvideo',
   locale: 'en_US',
   keywords: [
@@ -36,7 +38,7 @@ export const siteConfig = {
   authors: [
     {
       name: 'AI Video Generator',
-      url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+      url: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL,
     },
   ],
 }

@@ -31,7 +31,7 @@ npm run dev
 
 ### 4. Open in Browser
 
-Go to: **http://localhost:3000**
+Go to: **https://desirable-reflection-production-aa8a.up.railway.app**
 
 ---
 
@@ -169,7 +169,7 @@ Returns: video/mp4 file
    ```
 
 3. **Create Video**
-   - Open http://localhost:3000
+   - Open https://desirable-reflection-production-aa8a.up.railway.app
    - Click "Get Started" or enter prompt on home page
    - Adjust settings if needed
    - Click "Generate Video"

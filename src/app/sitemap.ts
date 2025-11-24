@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app'
 
 async function getArticles() {
   try {

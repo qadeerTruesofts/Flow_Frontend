@@ -17,7 +17,7 @@ This guide shows **exactly where** all URLs are configured and how to update the
 
 **Current Configuration** (Line 4):
 ```typescript
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app'
 ```
 
 **Status**: ✅ **GOOD** - Uses environment variable with localhost fallback
@@ -25,7 +25,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 **How to Update**: 
 1. Set environment variable in production:
    ```bash
-   NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+   NEXT_PUBLIC_SITE_URL=https://desirable-reflection-production-aa8a.up.railway.app
    ```
 
 2. Or update the fallback (line 4):
@@ -48,8 +48,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
 
 **Current Configuration** (Lines 20-21):
 ```
-Sitemap: https://flowvideo.com/sitemap.xml
-Sitemap: http://localhost:3000/sitemap.xml
+Sitemap: https://desirable-reflection-production-aa8a.up.railway.app/sitemap.xml
 ```
 
 **Status**: ⚠️ **NEEDS UPDATE** - Has hardcoded URLs
@@ -57,12 +56,7 @@ Sitemap: http://localhost:3000/sitemap.xml
 **How to Update**:
 Replace lines 20-21 with your production URL:
 ```
-Sitemap: https://yourdomain.com/sitemap.xml
-```
-
-**Or remove the localhost line entirely** (keep only production):
-```
-Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://desirable-reflection-production-aa8a.up.railway.app/sitemap.xml
 ```
 
 ---
@@ -79,7 +73,7 @@ All metadata uses `siteConfig.url` which reads from environment variable.
 url: process.env.NEXT_PUBLIC_SITE_URL || 'https://flowvideo.com',
 ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://flowvideo.com'}/og-image.jpg`,
 // Line 39:
-url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
+url: process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app',
 ```
 
 **Status**: ✅ **GOOD** - Uses environment variable
@@ -130,21 +124,19 @@ url: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000',
 
 1. **Create `.env.local` file** (or set in your hosting platform):
    ```bash
-   NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+   NEXT_PUBLIC_SITE_URL=https://desirable-reflection-production-aa8a.up.railway.app
    NEXT_PUBLIC_API_URL=https://api.yourdomain.com
    ```
 
-2. **Update `robots.txt`**:
-   ```diff
-   - Sitemap: https://flowvideo.com/sitemap.xml
-   - Sitemap: http://localhost:3000/sitemap.xml
-   + Sitemap: https://yourdomain.com/sitemap.xml
+2. **Update `robots.txt`** so the sitemap always points to the hosted frontend:
+   ```text
+   Sitemap: https://desirable-reflection-production-aa8a.up.railway.app/sitemap.xml
    ```
 
 3. **Update `seo-config.ts` fallback** (optional, for safety):
    ```diff
-   - url: process.env.NEXT_PUBLIC_SITE_URL || 'https://flowvideo.com',
-   + url: process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com',
+- url: process.env.NEXT_PUBLIC_SITE_URL || 'https://flowvideo.com',
++ url: process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app',
    ```
 
 ### **Option 2: Hardcode All URLs** (Not Recommended)
@@ -158,27 +150,25 @@ Update all files manually - see list above.
 ### **1. Sitemap URLs** (`src/app/sitemap.ts`)
 ```typescript
 // Line 4 - Update fallback if needed
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app'
 ```
 
 ### **2. Robots.txt** (`public/robots.txt`)
-```diff
+```text
 # Line 20-21 - REQUIRED UPDATE
-- Sitemap: https://flowvideo.com/sitemap.xml
-- Sitemap: http://localhost:3000/sitemap.xml
-+ Sitemap: https://yourdomain.com/sitemap.xml
+Sitemap: https://desirable-reflection-production-aa8a.up.railway.app/sitemap.xml
 ```
 
 ### **3. SEO Config** (`src/lib/seo-config.ts`)
 ```typescript
 // Line 6 - Main URL (optional fallback update)
-url: process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com',
+url: process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app',
 
 // Line 7 - OG Image URL (optional fallback update)
-ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com'}/og-image.jpg`,
+ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app'}/og-image.jpg`,
 
 // Line 39 - Author URL (optional fallback update)
-url: process.env.NEXT_PUBLIC_SITE_URL || 'https://yourdomain.com',
+url: process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app',
 ```
 
 ---
@@ -209,9 +199,8 @@ After updating, verify:
 ## 💡 **Pro Tip**
 
 **Best Practice**: Use environment variables everywhere! That way:
-- ✅ Development: `http://localhost:3000`
-- ✅ Production: `https://yourdomain.com`
-- ✅ No code changes needed between environments
+- ✅ Production: `https://desirable-reflection-production-aa8a.up.railway.app`
+- ✅ No code changes needed between environments (local `.env` overrides still work)
 
 **Just set**: `NEXT_PUBLIC_SITE_URL=https://yourdomain.com` in production!
 

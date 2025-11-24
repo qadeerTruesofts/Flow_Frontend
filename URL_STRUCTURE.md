@@ -258,10 +258,10 @@ cd Flow_Frontend
 npm run dev
 
 # Then visit:
-http://localhost:3000/                                    # Home
-http://localhost:3000/blogs                               # Blog listing
-http://localhost:3000/category/tutorials                  # Category
-http://localhost:3000/how-to-create-stunning-ai-videos   # Blog post
+https://desirable-reflection-production-aa8a.up.railway.app/                                    # Home
+https://desirable-reflection-production-aa8a.up.railway.app/blogs                               # Blog listing
+https://desirable-reflection-production-aa8a.up.railway.app/category/tutorials                  # Category
+https://desirable-reflection-production-aa8a.up.railway.app/how-to-create-stunning-ai-videos   # Blog post
 ```
 
 ---
