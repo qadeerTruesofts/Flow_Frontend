@@ -38,6 +38,17 @@ export default function Home() {
     if (accessToken) {
       // Store the token
       localStorage.setItem('access_token', accessToken)
+      
+      // Redirect to the page the user originally attempted to access
+      const redirectPath = localStorage.getItem('postLoginRedirect')
+      if (redirectPath) {
+        localStorage.removeItem('postLoginRedirect')
+        if (redirectPath !== `${window.location.pathname}${window.location.search}`) {
+          window.location.assign(redirectPath)
+          return
+        }
+      }
+      
       // Clean up URL
       window.history.replaceState({}, document.title, window.location.pathname)
     }
@@ -160,7 +171,7 @@ export default function Home() {
             <div className="flex justify-between items-center h-16">
               <Link href="/" className="flex items-center gap-2 group">
                 <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
-                <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">VideoAI</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Vidwave</span>
               </Link>
               <div className="hidden md:flex items-center gap-8" suppressHydrationWarning>
                 <Link href="/blogs" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
@@ -402,7 +413,7 @@ export default function Home() {
                 Trusted by Creators Worldwide
               </h2>
               <p className="text-lg text-gray-600">
-                See what our users say about VideoAI
+                See what our users say about Vidwave
               </p>
             </div>
 
@@ -528,7 +539,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center gap-2 mb-6">
                   <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl" />
-                  <span className="text-xl font-bold text-white">VideoAI</span>
+                  <span className="text-xl font-bold text-white">Vidwave</span>
                 </div>
                 <p className="text-sm leading-relaxed">
                   AI-powered text to video generator. Create professional videos in seconds with advanced AI technology.
@@ -562,7 +573,7 @@ export default function Home() {
             </div>
             
             <div className="pt-8 border-t border-gray-800 text-center text-sm">
-              <p>&copy; 2025 VideoAI - AI Video Generator. All rights reserved.</p>
+              <p>&copy; 2025 Vidwave - AI Video Generator. All rights reserved.</p>
             </div>
           </div>
         </footer>

@@ -29,7 +29,7 @@ const MobileMenu = memo(({ isOpen, onClose, onOpenLogin, isLoggedIn, userEmail, 
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-lg" />
-            <span className="text-lg font-bold text-gray-900">VideoAI</span>
+            <span className="text-lg font-bold text-gray-900">Vidwave</span>
           </div>
           <button
             onClick={onClose}

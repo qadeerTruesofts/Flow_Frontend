@@ -267,7 +267,7 @@ export default function BlogPostPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
-              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">VideoAI</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Vidwave</span>
             </Link>
             <div className="hidden md:flex items-center gap-8">
               <Link href="/blogs" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
@@ -522,7 +522,7 @@ export default function BlogPostPage() {
             <div>
               <div className="flex items-center gap-2 mb-6">
                 <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl" />
-                <span className="text-lg font-bold text-white">VideoAI</span>
+                <span className="text-lg font-bold text-white">Vidwave</span>
               </div>
               <p className="text-sm">
                 AI-powered video generation platform

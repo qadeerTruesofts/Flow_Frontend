@@ -510,7 +510,7 @@ export default function AdminPanel() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
               <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                Flow  Admin
+                Vidwave  Admin
               </Link>
               <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">
                 View Site
@@ -875,7 +875,7 @@ export default function AdminPanel() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Flow login email
+                     Vidwave login email
                     </label>
                     <input
                       type="email"
@@ -894,7 +894,7 @@ export default function AdminPanel() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Flow login password
+                      Vidwave login password
                     </label>
                     <input
                       type="password"

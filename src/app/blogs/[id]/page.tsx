@@ -104,7 +104,7 @@ export default function ArticleDetailPage() {
     dateModified: article.updated_at || article.date,
     author: {
       '@type': 'Person',
-      name: article.author || 'FlowVideo Team',
+      name: article.author || 'Vidwave Team',
     },
     publisher: {
       '@type': 'Organization',
@@ -179,7 +179,7 @@ export default function ArticleDetailPage() {
                 </svg>
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                FlowVideo
+                Vidwave
               </span>
             </Link>
             

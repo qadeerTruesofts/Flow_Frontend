@@ -272,7 +272,7 @@ Edit in each page's navigation:
 
 ```tsx
 <span className="text-xl font-bold...">
-  VideoAI  {/* Change this */}
+  Vidwave  {/* Change this */}
 </span>
 ```
 

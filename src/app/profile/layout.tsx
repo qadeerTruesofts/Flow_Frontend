@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { siteConfig } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
-  title: 'Profile - Manage Your FlowVideo Account',
-  description: 'Manage your FlowVideo account settings, view your video history, and update your profile information.',
+  title: 'Profile - Manage Your Vidwave Account',
+  description: 'Manage your Vidwave account settings, view your video history, and update your profile information.',
   keywords: [
     ...siteConfig.keywords,
     'user profile',
@@ -11,21 +11,21 @@ export const metadata: Metadata = {
     'video history'
   ].join(', '),
   openGraph: {
-    title: 'Profile - FlowVideo',
-    description: 'Manage your FlowVideo account settings and view your video history.',
+    title: 'Profile - Vidwave',
+    description: 'Manage your Vidwave account settings and view your video history.',
     url: `${siteConfig.url}/profile`,
     type: 'website',
     images: [{
       url: `${siteConfig.url}/og-image.jpg`,
       width: 1200,
       height: 630,
-      alt: 'FlowVideo - Profile',
+      alt: 'Vidwave - Profile',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Profile - FlowVideo',
-    description: 'Manage your FlowVideo account settings and view your video history.',
+    title: 'Profile - Vidwave',
+    description: 'Manage your Vidwave account settings and view your video history.',
     images: [`${siteConfig.url}/og-image.jpg`],
   },
   alternates: {

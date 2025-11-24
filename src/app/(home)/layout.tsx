@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { siteConfig } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
-  title: 'AI Video Generator - Create Stunning Videos with AI Technology | FlowVideo',
-  description: 'Create stunning AI-powered videos in seconds. Transform your ideas into professional videos with FlowVideo\'s advanced AI video generation technology. Free to start, no credit card required. Trusted by 50,000+ creators worldwide.',
+  title: 'AI Video Generator - Create Stunning Videos with AI Technology | Vidwave',
+  description: 'Create stunning AI-powered videos in seconds. Transform your ideas into professional videos with Vidwave\'s advanced AI video generation technology. Free to start, no credit card required. Trusted by 50,000+ creators worldwide.',
   keywords: [
     ...siteConfig.keywords,
     'free video generator',
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
     'video generator free'
   ].join(', '),
   openGraph: {
-    title: 'AI Video Generator - Create Stunning Videos with AI | FlowVideo',
-    description: 'Transform your ideas into professional videos in seconds with FlowVideo\'s advanced AI technology. Free to start, trusted by 50,000+ creators.',
+    title: 'AI Video Generator - Create Stunning Videos with AI | Vidwave',
+    description: 'Transform your ideas into professional videos in seconds with Vidwave\'s advanced AI technology. Free to start, trusted by 50,000+ creators.',
     url: siteConfig.url,
     type: 'website',
     siteName: siteConfig.name,
@@ -25,13 +25,13 @@ export const metadata: Metadata = {
       url: siteConfig.ogImage,
       width: 1200,
       height: 630,
-      alt: 'FlowVideo - AI Video Generator',
+      alt: 'Vidwave - AI Video Generator',
     }],
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Video Generator - Create Stunning Videos with AI | FlowVideo',
+    title: 'AI Video Generator - Create Stunning Videos with AI | Vidwave',
     description: 'Transform your ideas into professional videos in seconds. Free to start, trusted by 50,000+ creators.',
     images: [siteConfig.ogImage],
     creator: siteConfig.twitterHandle,

@@ -9,7 +9,7 @@ Successfully applied the premium design from the `video` directory to `Flow_Fron
 - **Consistent across all pages**: Home, Blog, Blog Posts, Categories
 - **Desktop Navigation Features**:
   - Premium gradient logo (blue-purple-pink gradient)
-  - "VideoAI" branding
+  - "Vidwave" branding
   - Navigation links: Blog, Text to AI Video
   - Dynamic authentication state:
     - **Not Logged In**: Shows "Login" + "Get Started Free" button (gradient purple)

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     'content creation blog'
   ].join(', '),
   openGraph: {
-    title: 'Blog - AI Video Generation Guides & Tutorials | FlowVideo',
+    title: 'Blog - AI Video Generation Guides & Tutorials | Vidwave',
     description: 'Discover expert insights, tutorials, and the latest updates in AI video technology.',
     url: `${siteConfig.url}/blogs`,
     type: 'website',
@@ -22,12 +22,12 @@ export const metadata: Metadata = {
       url: `${siteConfig.url}/og-image.jpg`,
       width: 1200,
       height: 630,
-      alt: 'FlowVideo Blog - AI Video Guides',
+      alt: 'Vidwave Blog - AI Video Guides',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Blog - AI Video Generation Guides & Tutorials | FlowVideo',
+    title: 'Blog - AI Video Generation Guides & Tutorials | Vidwave',
     description: 'Discover expert insights, tutorials, and the latest updates in AI video technology.',
     images: [`${siteConfig.url}/og-image.jpg`],
   },

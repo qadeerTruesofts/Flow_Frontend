@@ -3,11 +3,11 @@
 const DEFAULT_SITE_URL = 'https://desirable-reflection-production-aa8a.up.railway.app'
 
 export const siteConfig = {
-  name: 'FlowVideo - AI Video Generator',
-  description: 'Create stunning AI-powered videos in seconds. Transform your ideas into professional videos with FlowVideo\'s advanced AI video generation technology. Free to start, no credit card required. Trusted by 50,000+ creators worldwide.',
+  name: 'Vidwave - AI Video Generator',
+  description: 'Create stunning AI-powered videos in seconds. Transform your ideas into professional videos with Vidwave\'s advanced AI video generation technology. Free to start, no credit card required. Trusted by 50,000+ creators worldwide.',
   url: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL,
   ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL}/og-image.jpg`,
-  twitterHandle: '@flowvideo',
+  twitterHandle: '@Vidwave',
   locale: 'en_US',
   keywords: [
     'AI video generator',
@@ -22,7 +22,7 @@ export const siteConfig = {
     'AI content creation',
     'video marketing AI',
     'professional video maker',
-    'FlowVideo',
+    'Vidwave',
     'create video with AI',
     'AI video software',
     'online video generator',

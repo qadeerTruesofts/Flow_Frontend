@@ -3,7 +3,7 @@ import { siteConfig } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
   title: 'My Videos - Manage Your AI-Generated Videos',
-  description: 'View and manage all your AI-generated videos in one place. Access your video library, download videos, and create new content with FlowVideo.',
+  description: 'View and manage all your AI-generated videos in one place. Access your video library, download videos, and create new content with Vidwave.',
   keywords: [
     ...siteConfig.keywords,
     'video library',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     'video portfolio'
   ].join(', '),
   openGraph: {
-    title: 'My Videos - FlowVideo',
+    title: 'My Videos - Vidwave',
     description: 'View and manage all your AI-generated videos in one place.',
     url: `${siteConfig.url}/videos`,
     type: 'website',
@@ -21,12 +21,12 @@ export const metadata: Metadata = {
       url: `${siteConfig.url}/og-image.jpg`,
       width: 1200,
       height: 630,
-      alt: 'FlowVideo - My Videos',
+      alt: 'Vidwave - My Videos',
     }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'My Videos - FlowVideo',
+    title: 'My Videos - Vidwave',
     description: 'View and manage all your AI-generated videos in one place.',
     images: [`${siteConfig.url}/og-image.jpg`],
   },

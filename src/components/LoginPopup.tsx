@@ -13,7 +13,15 @@ const LoginPopup = memo(({ isOpen, onClose }: LoginPopupProps) => {
   const handleGoogleLogin = () => {
     // Redirect to backend OAuth endpoint
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-    window.location.href = `${API_BASE_URL}/api/auth/google`
+    if (typeof window !== 'undefined') {
+      try {
+        const redirectPath = `${window.location.pathname}${window.location.search}${window.location.hash}`
+        localStorage.setItem('postLoginRedirect', redirectPath || '/')
+      } catch {
+        // ignore storage errors
+      }
+      window.location.href = `${API_BASE_URL}/api/auth/google`
+    }
   }
 
   return (
@@ -42,7 +50,7 @@ const LoginPopup = memo(({ isOpen, onClose }: LoginPopupProps) => {
           {/* Logo */}
           <div className="flex items-center justify-center gap-2 mb-6">
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg" />
-            <span className="text-2xl font-bold text-white">VideoAI</span>
+            <span className="text-2xl font-bold text-white">Vidwave</span>
           </div>
 
           {/* Title */}

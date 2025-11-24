@@ -55,7 +55,7 @@ export default function AdminLogin() {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-            Flow  Admin
+            Vidwave  Admin
           </h1>
           <p className="text-gray-600">Sign in to access the admin panel</p>
         </div>

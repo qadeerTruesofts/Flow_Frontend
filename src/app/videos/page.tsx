@@ -135,7 +135,7 @@ export default function VideosPage() {
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
-              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">VideoAI</span>
+              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Vidwave</span>
             </Link>
             
             {/* Desktop Navigation */}
