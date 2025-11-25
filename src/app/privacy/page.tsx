@@ -31,7 +31,7 @@ const sections = [
   {
     title: '4. Data retention & security',
     content: [
-      'Rendering credentials (e.g., Veo tokens) are encrypted at rest and rotated automatically when possible.',
+      'Rendering credentials are encrypted at rest and rotated automatically when possible.',
       'Project assets are retained while your account remains active or until you delete them from the dashboard.',
       'Backups are stored on secure infrastructure with limited access and strict logging.',
       'If you close your account, we remove or anonymize personal data within 30 days unless legal obligations require longer retention.',

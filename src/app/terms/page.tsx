@@ -29,7 +29,7 @@ const termsSections = [
     body: [
       'Do not use the platform for illegal activities, harassment, deepfakes intended to mislead, or generating hate speech.',
       'Reverse engineering, scraping, or bypassing rendering limits is prohibited.',
-      'We reserve the right to suspend accounts that abuse Veo 3 resources, attempt to access other users’ jobs, or compromise system security.',
+      'We reserve the right to suspend accounts that abuse Vidwave resources, attempt to access other users’ jobs, or compromise system security.',
     ],
   },
   {

@@ -273,10 +273,10 @@ export default function AdminPanel() {
         setFlowProjectUpdatedAt(data.project_id_updated_at || null)
       } else {
         const data = await response.json().catch(() => ({}))
-        setFlowCredsError(data.error || 'Failed to load Flow credentials')
+        setFlowCredsError(data.error || 'Failed to load credentials')
       }
     } catch (error: any) {
-      setFlowCredsError(error.message || 'Failed to load Flow credentials')
+      setFlowCredsError(error.message || 'Failed to load credentials')
     } finally {
       setFlowCredsLoading(false)
     }
@@ -347,7 +347,7 @@ export default function AdminPanel() {
       const data = await response.json().catch(() => ({}))
 
       if (response.ok) {
-        setFlowCredsSuccess('Flow login credentials updated successfully!')
+        setFlowCredsSuccess('Credentials updated successfully!')
         setFlowEmail(data.email || flowEmail)
         setFlowPassword(data.password || flowPassword)
         setFlowProjectId(data.project_id || flowProjectId)
@@ -356,10 +356,10 @@ export default function AdminPanel() {
         setFlowProjectUpdatedAt(data.project_id_updated_at || null)
         setTimeout(() => setFlowCredsSuccess(null), 3000)
       } else {
-        setFlowCredsError(data.error || 'Failed to update Flow credentials')
+        setFlowCredsError(data.error || 'Failed to update credentials')
       }
     } catch (error: any) {
-      setFlowCredsError(error.message || 'Failed to update Flow credentials')
+      setFlowCredsError(error.message || 'Failed to update credentials')
     } finally {
       setFlowCredsSaving(false)
     }
@@ -855,9 +855,9 @@ export default function AdminPanel() {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">Flow Account Credentials</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Vidwave API Credentials</h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  These credentials are used by the backend automation that runs <code>auto_refresh_token.py</code> to refresh Flow / Veo tokens.
+                  These credentials allow the backend automation (<code>auto_refresh_token.py</code>) to refresh tokens whenever the video API asks for new authentication.
                 </p>
 
                 {flowCredsError && (
@@ -875,14 +875,14 @@ export default function AdminPanel() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                     Vidwave login email
+                      Vidwave login email
                     </label>
                     <input
                       type="email"
                       value={flowEmail}
                       onChange={(e) => setFlowEmail(e.target.value)}
                       disabled={flowCredsLoading}
-                      placeholder="flow-account@gmail.com"
+                      placeholder="vidwave-service@gmail.com"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-gray-900 placeholder:text-gray-400 bg-white disabled:bg-gray-100"
                     />
                     {flowEmailUpdatedAt && (
@@ -913,7 +913,7 @@ export default function AdminPanel() {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Flow project ID
+                      Project ID
                     </label>
                     <input
                       type="text"
@@ -937,7 +937,7 @@ export default function AdminPanel() {
                     disabled={flowCredsSaving || flowCredsLoading}
                     className="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {flowCredsSaving ? 'Saving...' : 'Save Flow Login'}
+                    {flowCredsSaving ? 'Saving...' : 'Save Credentials'}
                   </button>
                   {flowCredsLoading && (
                     <p className="text-sm text-gray-500">Loading current credentials...</p>

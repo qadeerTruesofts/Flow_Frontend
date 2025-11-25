@@ -6,7 +6,7 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app').replace(/\/$/, '')
 const DEFAULT_DESCRIPTION =
   'Vidwave turns your ideas into captivating AI-generated videos in minutes. Explore tutorials, workflows, and inspiration from the Vidwave team.'
-const DEFAULT_KEYWORDS = ['Vidwave', 'AI video generator', 'text to video', 'Veo 3', 'AI storytelling']
+const DEFAULT_KEYWORDS = ['Vidwave', 'AI video generator', 'text to video', 'Vidwave AI', 'AI storytelling']
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=630&fit=crop'
 
 export const revalidate = 0

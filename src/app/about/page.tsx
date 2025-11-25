@@ -36,7 +36,7 @@ const milestones = [
   {
     date: 'Q4 2023',
     title: 'Private beta',
-    detail: 'Expanded to 500 invited creators, added native Veo 3 integration, and shipped the first admin dashboard.',
+    detail: 'Expanded to 500 invited creators, added native Vidwave pipeline integration, and shipped the first admin dashboard.',
   },
   {
     date: 'Q2 2024',
@@ -73,7 +73,7 @@ export default function AboutPage() {
             We make premium video creation effortless
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
-            Vidwave is an AI-native studio that combines Google&rsquo;s Veo 3 models, thoughtful UX, and mission-critical
+            Vidwave is an AI-native studio that combines the latest Google video models, thoughtful UX, and mission-critical
             automation. We believe anyone should be able to turn imagination into polished footage without touching a
             timeline.
           </p>
