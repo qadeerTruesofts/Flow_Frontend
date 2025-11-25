@@ -1,6 +1,6 @@
-# Flow Frontend - AI Video Generator UI
+# Vidwave Frontend - AI Video Studio UI
 
-Beautiful Next.js frontend for the Google Flow video generation scraper.
+Beautiful Next.js frontend powering Vidwave’s Google Veo video generation experience.
 
 ---
 
@@ -31,7 +31,7 @@ npm run dev
 
 ### 4. Open in Browser
 
-Go to: **https://desirable-reflection-production-aa8a.up.railway.app**
+Go to: **https://vidwave.ai/**
 
 ---
 
@@ -155,7 +155,7 @@ Returns: video/mp4 file
 
 ---
 
-## 🎬 Usage Flow
+## 🎬 Usage Guide
 
 1. **Start Backend**
    ```bash

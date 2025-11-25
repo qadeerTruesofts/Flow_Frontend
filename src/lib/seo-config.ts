@@ -1,13 +1,14 @@
-// SEO Configuration for AI Video Generator
+// SEO configuration for Vidwave
 
-const DEFAULT_SITE_URL = 'https://desirable-reflection-production-aa8a.up.railway.app'
+const DEFAULT_SITE_URL = 'https://vidwave.ai'
 
 export const siteConfig = {
-  name: 'Vidwave - AI Video Generator',
-  description: 'Create stunning AI-powered videos in seconds. Transform your ideas into professional videos with Vidwave\'s advanced AI video generation technology. Free to start, no credit card required. Trusted by 50,000+ creators worldwide.',
-  url: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL,
-  ogImage: `${process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL}/og-image.jpg`,
-  twitterHandle: '@Vidwave',
+  name: 'Vidwave',
+  description:
+    'Vidwave is the AI-first studio that turns text prompts into premium, production-ready videos in seconds. No editing skills required.',
+  url: (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, ''),
+  ogImage: `${(process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, '')}/og-image.jpg`,
+  twitterHandle: '@vidwaveai',
   locale: 'en_US',
   keywords: [
     'AI video generator',
@@ -37,8 +38,8 @@ export const siteConfig = {
   ],
   authors: [
     {
-      name: 'AI Video Generator',
-      url: process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL,
+      name: 'Vidwave Team',
+      url: (process.env.NEXT_PUBLIC_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, ''),
     },
   ],
 }
@@ -77,10 +78,10 @@ export const jsonLdOrganization = {
     availableLanguage: 'English',
   },
   sameAs: [
-    'https://twitter.com/flowvideo',
-    'https://facebook.com/flowvideo',
-    'https://linkedin.com/company/flowvideo',
-    'https://instagram.com/flowvideo',
+    'https://twitter.com/vidwaveai',
+    'https://www.facebook.com/vidwaveai',
+    'https://www.linkedin.com/company/vidwaveai',
+    'https://www.instagram.com/vidwaveai',
   ],
   aggregateRating: {
     '@type': 'AggregateRating',

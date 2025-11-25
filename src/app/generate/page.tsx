@@ -451,28 +451,28 @@ export default function GeneratePage() {
                     )}
                   </div>
                   
-                  <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl flex items-center justify-center border border-slate-200 overflow-hidden relative">
+                  <div className="aspect-video min-h-[240px] sm:min-h-[320px] bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl flex items-center justify-center border border-slate-200 overflow-hidden relative">
                     {videoUrl ? (
                       // Video ready - show the video
-                      <div className="w-full h-full">
-                        <video
-                          src={videoUrl}
-                          controls
-                          autoPlay
-                          className="w-full h-full object-contain bg-black"
-                        />
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <a
-                            href={videoUrl}
-                            download
-                            className="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/40 transition-all flex items-center justify-center gap-2 shadow-lg"
-                          >
-                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                            </svg>
-                            Download Video
-                          </a>
+                      <div className="w-full flex flex-col h-full">
+                        <div className="flex-1 w-full">
+                          <video
+                            src={videoUrl}
+                            controls
+                            autoPlay
+                            className="w-full h-full object-contain bg-black rounded-xl"
+                          />
                         </div>
+                        <a
+                          href={videoUrl}
+                          download
+                          className="mt-4 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/40 transition-all flex items-center justify-center gap-2 shadow-lg"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                          </svg>
+                          Download Video
+                        </a>
                       </div>
                     ) : isGenerating ? (
                       // Generating - show progress

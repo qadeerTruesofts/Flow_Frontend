@@ -47,11 +47,11 @@ export const createArticleSchema = (article: {
   dateModified: article.dateModified || article.datePublished,
   author: {
     '@type': 'Person',
-    name: article.authorName || 'AI Video Generator',
+    name: article.authorName || 'Vidwave',
   },
   publisher: {
     '@type': 'Organization',
-    name: 'AI Video Generator',
+    name: 'Vidwave',
     logo: {
       '@type': 'ImageObject',
       url: '/logo.png',

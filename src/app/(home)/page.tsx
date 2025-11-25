@@ -122,8 +122,8 @@ export default function Home() {
   // FAQ Structured Data for SEO
   const faqSchema = useMemo(() => createFAQSchema([
     {
-      question: 'What is AI Video Generator?',
-      answer: 'AI Video Generator is an advanced artificial intelligence-powered platform that transforms text descriptions and images into high-quality, professional videos in minutes. No video editing experience required.',
+      question: 'What is Vidwave?',
+      answer: 'Vidwave is an AI-native video studio that transforms your text descriptions and assets into polished, professional footage in minutes—no editing skills required.',
     },
     {
       question: 'How long does it take to generate a video?',
@@ -139,7 +139,7 @@ export default function Home() {
     },
     {
       question: 'Can I use the videos commercially?',
-      answer: 'Yes, all videos generated with AI Video Generator can be used for commercial purposes without any watermarks or restrictions.',
+      answer: 'Yes, every video rendered with Vidwave can be used commercially with no watermarks or hidden licensing fees.',
     },
   ]), [])
 
@@ -258,10 +258,10 @@ export default function Home() {
             {/* Premium Headline */}
             <div className="text-center mb-12">
               <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-[1.1] tracking-tight">
-                AI Video Generator
+                Vidwave
                 <br />
                 <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Turn Text to Ai Videos
+                  Turn Text into AI Videos
                 </span>
               </h1>
               <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto leading-relaxed">
@@ -282,15 +282,17 @@ export default function Home() {
                     value={promptText}
                     onChange={(e) => setPromptText(e.target.value)}
                     placeholder="Describe your video... e.g., 'A beautiful sunset over mountains with calm music'"
-                    className="w-full px-8 py-6 pr-48 rounded-3xl bg-white border-2 border-gray-200 focus:border-purple-500 outline-none text-lg transition-all shadow-xl hover:shadow-2xl placeholder:text-gray-400"
+                    className="w-full px-4 sm:px-6 lg:px-8 py-12 sm:py-6 pr-4 sm:pr-48 rounded-3xl bg-white border-2 border-gray-200 focus:border-purple-500 outline-none text-lg transition-all shadow-xl hover:shadow-2xl placeholder:text-gray-400"
                     onKeyDown={handleKeyDown}
                   />
-                  <button
-                    onClick={handleGenerateClick}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
-                  >
-                    Generate Free →
-                  </button>
+                  <div className="flex flex-col gap-3 sm:gap-0 sm:block">
+                    <button
+                      onClick={handleGenerateClick}
+                      className="mt-3 sm:mt-0 w-full sm:w-auto sm:absolute sm:right-2 sm:top-1/2 sm:-translate-y-1/2 px-6 sm:px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
+                    >
+                      Generate Free →
+                    </button>
+                  </div>
                 </div>
               </div>
               
@@ -423,7 +425,7 @@ export default function Home() {
                 {
                   name: 'Sarah Mitchell',
                   role: 'Content Creator',
-                  text: 'This AI video generator has completely transformed my workflow. I create professional videos in minutes that used to take me hours.',
+                  text: 'Vidwave has completely transformed my workflow. I create professional videos in minutes that used to take me hours.',
                   verified: true
                 },
                 {
@@ -498,9 +500,9 @@ export default function Home() {
             </div>
             
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Ready to Create Your
+              Ready to Ship Your
               <br />
-              First AI Video?
+              First Vidwave Project?
             </h2>
             <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
               Join 10,000+ creators using AI to generate professional videos in seconds
@@ -558,22 +560,22 @@ export default function Home() {
               <div>
                 <h3 className="font-semibold text-white mb-4">Company</h3>
                 <ul className="space-y-3 text-sm">
-                  <li><Link href="#" className="hover:text-white transition-colors">About</Link></li>
-                  <li><Link href="#" className="hover:text-white transition-colors">Contact</Link></li>
+                  <li><Link href="/about" className="hover:text-white transition-colors">About</Link></li>
+                  <li><a href="mailto:hello@vidwave.ai" className="hover:text-white transition-colors">Contact</a></li>
                 </ul>
               </div>
               
               <div>
                 <h3 className="font-semibold text-white mb-4">Legal</h3>
                 <ul className="space-y-3 text-sm">
-                  <li><Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-                  <li><Link href="#" className="hover:text-white transition-colors">Terms of Service</Link></li>
+                  <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+                  <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
                 </ul>
               </div>
             </div>
             
             <div className="pt-8 border-t border-gray-800 text-center text-sm">
-              <p>&copy; 2025 Vidwave - AI Video Generator. All rights reserved.</p>
+              <p>&copy; 2025 Vidwave. All rights reserved.</p>
             </div>
           </div>
         </footer>

@@ -67,7 +67,7 @@ export function generateMetadata({
       ...(type === 'article' && publishedTime && {
         publishedTime,
         modifiedTime,
-        authors: authors || ['AI Video Generator'],
+        authors: authors || ['Vidwave'],
       }),
     },
     twitter: {

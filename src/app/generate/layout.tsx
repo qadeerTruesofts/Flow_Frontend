@@ -2,7 +2,7 @@ import { Metadata } from 'next'
 import { siteConfig } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
-  title: 'Generate AI Video - Create Videos from Text',
+  title: 'Generate Videos with Vidwave | Text to Video AI',
   description: 'Generate professional AI-powered videos instantly from text descriptions. Transform your ideas into stunning videos with Vidwave\'s advanced AI technology. Free to try!',
   keywords: [
     ...siteConfig.keywords,
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     'AI video maker online'
   ].join(', '),
   openGraph: {
-    title: 'Generate AI Video - Vidwave',
+    title: 'Generate Videos with Vidwave',
     description: 'Generate professional AI-powered videos instantly from text descriptions. Free to try!',
     url: `${siteConfig.url}/generate`,
     type: 'website',
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Generate AI Video - FlowVideo',
+    title: 'Generate Videos with Vidwave',
     description: 'Generate professional AI-powered videos instantly from text descriptions. Free to try!',
     images: [`${siteConfig.url}/og-image.jpg`],
   },

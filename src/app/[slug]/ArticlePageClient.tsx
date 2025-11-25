@@ -407,14 +407,14 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
               <h3 className="font-semibold text-white mb-4">Company</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="/about" className="hover:text-white transition-colors">
                     About
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <a href="mailto:hello@vidwave.ai" className="hover:text-white transition-colors">
                     Contact
-                  </Link>
+                  </a>
                 </li>
               </ul>
             </div>
@@ -422,12 +422,12 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
               <h3 className="font-semibold text-white mb-4">Legal</h3>
               <ul className="space-y-3 text-sm">
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="/privacy" className="hover:text-white transition-colors">
                     Privacy Policy
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-white transition-colors">
+                  <Link href="/terms" className="hover:text-white transition-colors">
                     Terms of Service
                   </Link>
                 </li>
@@ -435,7 +435,7 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
             </div>
           </div>
           <div className="pt-8 border-t border-gray-800 text-center text-sm">
-            <p>&copy; 2025 Vidwave - AI Video Generator. All rights reserved.</p>
+            <p>&copy; 2025 Vidwave. All rights reserved.</p>
           </div>
         </div>
       </footer>

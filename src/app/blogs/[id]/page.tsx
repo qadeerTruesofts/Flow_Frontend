@@ -231,7 +231,7 @@ export default function ArticleDetailPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" aria-hidden="true" />
                   <meta itemProp="datePublished" content={article.date} />
                   {article.updated_at && <meta itemProp="dateModified" content={article.updated_at} />}
-                  <meta itemProp="author" content={article.author || 'AI Video Generator Team'} />
+                  <meta itemProp="author" content={article.author || 'Vidwave Team'} />
                 </div>
               </div>
 

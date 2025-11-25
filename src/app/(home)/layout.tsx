@@ -2,8 +2,8 @@ import { Metadata } from 'next'
 import { siteConfig } from '@/lib/seo-config'
 
 export const metadata: Metadata = {
-  title: 'AI Video Generator - Create Stunning Videos with AI Technology | Vidwave',
-  description: 'Create stunning AI-powered videos in seconds. Transform your ideas into professional videos with Vidwave\'s advanced AI video generation technology. Free to start, no credit card required. Trusted by 50,000+ creators worldwide.',
+  title: 'Vidwave | AI Video Studio',
+  description: 'Vidwave lets you turn ideas into premium AI-generated videos in seconds. Launch campaigns faster with cinematic renders, voiceovers, and motion graphics—no editing skills required.',
   keywords: [
     ...siteConfig.keywords,
     'free video generator',
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'video generator free'
   ].join(', '),
   openGraph: {
-    title: 'AI Video Generator - Create Stunning Videos with AI | Vidwave',
+    title: 'Vidwave | AI Video Studio',
     description: 'Transform your ideas into professional videos in seconds with Vidwave\'s advanced AI technology. Free to start, trusted by 50,000+ creators.',
     url: siteConfig.url,
     type: 'website',
@@ -25,13 +25,13 @@ export const metadata: Metadata = {
       url: siteConfig.ogImage,
       width: 1200,
       height: 630,
-      alt: 'Vidwave - AI Video Generator',
+      alt: 'Vidwave | AI Video Studio',
     }],
     locale: 'en_US',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Video Generator - Create Stunning Videos with AI | Vidwave',
+    title: 'Vidwave | AI Video Studio',
     description: 'Transform your ideas into professional videos in seconds. Free to start, trusted by 50,000+ creators.',
     images: [siteConfig.ogImage],
     creator: siteConfig.twitterHandle,
