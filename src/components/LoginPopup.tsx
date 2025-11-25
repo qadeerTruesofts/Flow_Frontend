@@ -17,10 +17,12 @@ const LoginPopup = memo(({ isOpen, onClose }: LoginPopupProps) => {
       try {
         const redirectPath = `${window.location.pathname}${window.location.search}${window.location.hash}`
         localStorage.setItem('postLoginRedirect', redirectPath || '/')
+        // Pass redirect path as query parameter to backend
+        window.location.href = `${API_BASE_URL}/api/auth/google?redirect=${encodeURIComponent(redirectPath || '/')}`
       } catch {
         // ignore storage errors
+        window.location.href = `${API_BASE_URL}/api/auth/google`
       }
-      window.location.href = `${API_BASE_URL}/api/auth/google`
     }
   }
 
