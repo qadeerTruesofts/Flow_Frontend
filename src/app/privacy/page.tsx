@@ -6,16 +6,15 @@ const sections = [
     title: '1. Information we collect',
     content: [
       'Account data such as name, email address, Google profile information, and authentication tokens when you sign in.',
-      'Content data including prompts, uploaded reference assets, rendered videos, and article metadata you manage through the admin panel.',
-      'Technical data such as device details, browser type, approximate location, and diagnostics that help us monitor queue health and API performance.',
-      'Payment or billing identifiers if you subscribe to a paid Vidwave plan (processed securely by our payment partners).',
+      'Content data including prompts, uploaded reference assets, rendered videos.',
+      
     ],
   },
   {
     title: '2. How we use your information',
     content: [
       'Authenticate you with Google OAuth, maintain session security, and keep you signed in across devices.',
-      'Render videos using your prompts, update Veo 3 tokens automatically, and deliver files back to your dashboard.',
+      'Render videos using your prompts  and deliver files back to your dashboard.',
       'Improve the platform by analyzing aggregate usage, testing new features, and preventing abuse or fraud.',
       'Communicate service updates, product education, newsletters, or respond to support requests.',
     ],
@@ -23,9 +22,9 @@ const sections = [
   {
     title: '3. Sharing your data',
     content: [
-      'Infrastructure providers such as Railway, DigitalOcean, Google Cloud, and AWS for hosting, storage, and queue processing.',
+      
       'Analytics and error tracking tools that help us monitor uptime and performance.',
-      'Payment gateways when you upgrade to paid features (we never store full card numbers on Vidwave servers).',
+      
       'Legal or compliance requests when required to meet applicable laws, defend our rights, or respond to valid subpoenas.',
     ],
   },
