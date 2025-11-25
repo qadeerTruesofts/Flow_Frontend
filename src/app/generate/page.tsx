@@ -9,6 +9,9 @@ import dynamic from 'next/dynamic'
 const MobileMenu = dynamic(() => import('@/components/MobileMenu'), {
   ssr: false
 })
+const LoginPopup = dynamic(() => import('@/components/LoginPopup'), {
+  ssr: false
+})
 
 // Backend API URL - change this to your backend server URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
@@ -33,10 +36,31 @@ export default function GeneratePage() {
   const progressTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
+    // Check for access_token in URL (from Google OAuth redirect - in case user lands directly here)
+    let hadAccessToken = false
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search)
+      const accessToken = urlParams.get('access_token')
+      
+      if (accessToken) {
+        // Store the token
+        localStorage.setItem('access_token', accessToken)
+        hadAccessToken = true
+        
+        // Clean up URL by removing access_token parameter but keep all other params including prompt
+        const currentSearch = new URLSearchParams(window.location.search)
+        currentSearch.delete('access_token')
+        const newUrl = window.location.pathname + (currentSearch.toString() ? `?${currentSearch.toString()}` : '')
+        window.history.replaceState({}, document.title, newUrl)
+      }
+    }
+    
     const urlPrompt = searchParams.get('prompt')
     if (urlPrompt) {
       setPrompt(urlPrompt)
     }
+    
+    // Check auth status
     checkAuth()
   }, [searchParams])
 
@@ -605,52 +629,17 @@ export default function GeneratePage() {
         </div>
       </div>
 
-      {/* Login Popup - No close button for mandatory login */}
-      {isLoginOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center">
-          {/* Backdrop - not clickable */}
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-          
-          {/* Modal */}
-          <div className="relative w-full max-w-md mx-4 bg-gradient-to-b from-gray-900 to-gray-800 rounded-3xl shadow-2xl overflow-hidden">
-            {/* Header */}
-            <div className="relative px-8 pt-8 pb-6 border-b border-gray-700">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center">
-                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                </svg>
-              </div>
-              <h2 className="text-2xl font-bold text-white text-center mb-2">Sign in for extra perks</h2>
-              <p className="text-gray-400 text-center text-sm">
-                Logging in lets you track history, manage daily limits, and view saved videos.
-              </p>
-            </div>
-            
-            {/* Body */}
-            <div className="p-8">
-              <button
-                onClick={() => {
-                  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-                  window.location.href = `${API_BASE_URL}/api/auth/google`
-                }}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 bg-white hover:bg-gray-50 text-gray-900 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl group"
-              >
-                <svg className="w-6 h-6" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                  <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                  <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                  <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
-                <span>Continue with Google</span>
-              </button>
-              
-              <p className="mt-6 text-center text-xs text-gray-500">
-                By continuing, you agree to our Terms of Service and Privacy Policy
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Login Popup */}
+      <LoginPopup 
+        isOpen={isLoginOpen} 
+        onClose={() => {
+          // Don't allow closing if not logged in - login is required
+          if (!isLoggedIn) {
+            return
+          }
+          setIsLoginOpen(false)
+        }} 
+      />
     </div>
   )
 }
