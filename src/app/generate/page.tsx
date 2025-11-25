@@ -205,7 +205,7 @@ export default function GeneratePage() {
       }
       progressTimerRef.current = setInterval(() => {
         const elapsed = Date.now() - startTime
-        const duration = 60000 // 1 minute
+        const duration = 80000 // 1 minute 20 seconds
         const nextProgress = Math.min(100, Math.round((elapsed / duration) * 100))
         setProgress(nextProgress)
         if (elapsed >= duration && progressTimerRef.current) {
