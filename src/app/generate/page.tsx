@@ -454,19 +454,23 @@ export default function GeneratePage() {
                   <div className="aspect-video min-h-[240px] sm:min-h-[320px] bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl flex items-center justify-center border border-slate-200 overflow-hidden relative">
                     {videoUrl ? (
                       // Video ready - show the video
-                      <div className="w-full flex flex-col h-full">
-                        <div className="flex-1 w-full">
+                      <div className="w-full h-full flex flex-col">
+                        <div className="relative flex-1 w-full bg-black rounded-2xl overflow-hidden">
                           <video
                             src={videoUrl}
                             controls
                             autoPlay
-                            className="w-full h-full object-contain bg-black rounded-xl"
+                            className="w-full h-full object-contain bg-black"
                           />
+                          <div className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-black/10" />
+                          <div className="absolute -bottom-6 left-0 right-0 flex justify-center">
+                            <div className="pointer-events-none h-6 w-4 rounded-b-full bg-black opacity-20 blur" />
+                          </div>
                         </div>
                         <a
                           href={videoUrl}
                           download
-                          className="mt-4 w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/40 transition-all flex items-center justify-center gap-2 shadow-lg"
+                          className="mt-5 w-full py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/40 transition-all flex items-center justify-center gap-2 shadow-lg"
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
