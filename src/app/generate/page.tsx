@@ -451,7 +451,13 @@ export default function GeneratePage() {
                     )}
                   </div>
                   
-                  <div className="aspect-video min-h-[240px] sm:min-h-[320px] bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl flex items-center justify-center border border-slate-200 overflow-hidden relative">
+                  <div
+                    className={`bg-gradient-to-br from-slate-100 to-slate-50 rounded-2xl border border-slate-200 relative ${
+                      videoUrl
+                        ? 'aspect-video min-h-[240px] sm:min-h-[320px] flex items-center justify-center overflow-hidden'
+                        : 'p-4 sm:p-8 min-h-[260px]'
+                    }`}
+                  >
                     {videoUrl ? (
                       // Video ready - show the video
                       <div className="w-full h-full flex flex-col">
