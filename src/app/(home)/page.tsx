@@ -281,8 +281,8 @@ export default function Home() {
                     type="text"
                     value={promptText}
                     onChange={(e) => setPromptText(e.target.value)}
-                    placeholder="Describe your video... e.g., 'A beautiful sunset over mountains with calm music'"
-                    className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pr-4 sm:pr-48 rounded-3xl bg-white border-2 border-gray-200 focus:border-purple-500 outline-none text-lg transition-all shadow-xl hover:shadow-2xl placeholder:text-gray-400"
+                    placeholder="Describe your video..."
+                    className="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-6 pr-4 sm:pr-48 rounded-3xl bg-white border-2 border-gray-200 focus:border-purple-500 outline-none text-sm sm:text-base lg:text-lg transition-all shadow-xl hover:shadow-2xl placeholder:text-gray-400"
                     onKeyDown={handleKeyDown}
                   />
                   <div className="flex flex-col gap-3 sm:gap-0 sm:block">
