@@ -1,7 +1,8 @@
 import { MetadataRoute } from 'next'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app'
+// Ensure SITE_URL doesn't end with a slash to avoid double slashes
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://desirable-reflection-production-aa8a.up.railway.app').replace(/\/$/, '')
 
 async function getArticles() {
   try {
@@ -50,10 +51,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }))
 
-  // Category pages
+  // Category pages - use /category/ with slugified category names
+  const slugify = (text: string) => {
+    return text
+      .toString()
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w\-]+/g, '')
+      .replace(/\-\-+/g, '-')
+  }
+  
   const categories = Array.from(new Set(articles.map((article: any) => article.category).filter(Boolean)))
   const categoryPages = categories.map((category: string) => ({
-    url: `${SITE_URL}/blogs/category/${encodeURIComponent(category)}`,
+    url: `${SITE_URL}/category/${slugify(category)}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.6,

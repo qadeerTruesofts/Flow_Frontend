@@ -258,12 +258,15 @@ export default function Home() {
             {/* Premium Headline */}
             <div className="text-center mb-12">
               <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-[1.1] tracking-tight">
-                Vidwave
+                Free Ai Video Generator
                 <br />
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                <span className="text-3xl md:text-5xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Turn Text into AI Videos
                 </span>
+                
               </h1>
+              
+                
               <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto leading-relaxed">
                 Create professional videos from text with AI-powered generation. No editing skills needed.
               </p>
@@ -500,9 +503,9 @@ export default function Home() {
             </div>
             
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Ready to Ship Your
+              Turn Thoughts into Videos
               <br />
-              First Vidwave Project?
+              with Vidwave ?
             </h2>
             <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
               Join 10,000+ creators using AI to generate professional videos in seconds
