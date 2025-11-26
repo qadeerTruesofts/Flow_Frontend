@@ -151,7 +151,7 @@ export default function CategoryBlogPage() {
               {articles.map((article) => (
                 <Link
                   key={article.id}
-                  href={`/blogs/${article.slug}`}
+                  href={`/${article.slug}`}
                   className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 hover:border-indigo-500/30 hover:shadow-xl transition-all group"
                 >
                   {/* Article Image */}

@@ -82,7 +82,7 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   }
   keywords.push(article.category)
 
-  const canonical = `${siteConfig.url}/blogs/${article.slug}`
+  const canonical = `${siteConfig.url}/${article.slug}`
   const publishedTime = article.date
   const modifiedTime = article.updated_at || article.date
 

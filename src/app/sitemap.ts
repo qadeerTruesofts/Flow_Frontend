@@ -42,9 +42,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ]
 
-  // Dynamic article pages
+  // Dynamic article pages - use /{slug} instead of /blogs/{slug}
   const articlePages = articles.map((article: any) => ({
-    url: `${SITE_URL}/blogs/${article.slug || article.id}`,
+    url: `${SITE_URL}/${article.slug || article.id}`,
     lastModified: new Date(article.updated_at || article.date || new Date()),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
