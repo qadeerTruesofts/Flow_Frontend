@@ -53,12 +53,12 @@ const LoginPopup = memo(({ isOpen, onClose }: LoginPopupProps) => {
           {/* Logo */}
           <div className="flex items-center justify-center gap-2 mb-6">
             <Image 
-              src="/VidWave-white-trans.png" 
+              src="/vidwave-logo-white.svg" 
               alt="Vidwave Logo" 
-              width={250} 
-              height={80} 
-              className="w-[250px] h-[80px]"
-              style={{ width: '250px', height: '80px' }}
+              width={200} 
+              height={60} 
+              className="w-[200px] h-[60px]"
+              style={{ width: '200px', height: '60px' }}
             />
           </div>
 

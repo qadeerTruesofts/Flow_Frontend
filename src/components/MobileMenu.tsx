@@ -32,10 +32,10 @@ const MobileMenu = memo(({ isOpen, onClose, onOpenLogin, isLoggedIn, userEmail, 
             <Image 
               src="/VidWave-logo.svg" 
               alt="Vidwave Logo" 
-              width={60} 
-              height={60} 
-              className="w-[60px] h-[60px]"
-              style={{ width: '60px', height: '60px' }}
+              width={150} 
+              height={45} 
+              className="w-[150px] h-[45px]"
+              style={{ width: '150px', height: '45px' }}
             />
           </div>
           <button

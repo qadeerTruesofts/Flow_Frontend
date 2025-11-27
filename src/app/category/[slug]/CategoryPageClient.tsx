@@ -114,15 +114,15 @@ export default function CategoryPageClient({ slug, categoryName, articles: initi
       {/* Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-24">
+          <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center gap-2 group">
               <Image 
                 src="/VidWave-logo.svg" 
                 alt="Vidwave Logo" 
-                width={180} 
+                width={200} 
                 height={60} 
-                className="w-[180px] h-[60px]"
-                style={{ width: '180px', height: '60px' }}
+                className="w-[200px] h-[60px]"
+                style={{ width: '200px', height: '60px' }}
                 priority
               />
             </Link>
@@ -318,12 +318,12 @@ export default function CategoryPageClient({ slug, categoryName, articles: initi
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Image 
-              src="/VidWave-white-trans.png" 
+              src="/vidwave-logo-white.svg" 
               alt="Vidwave Logo" 
-              width={250} 
-              height={80} 
-              className="w-[250px] h-[80px]"
-              style={{ width: '250px', height: '80px' }}
+              width={200} 
+              height={60} 
+              className="w-[200px] h-[60px]"
+              style={{ width: '200px', height: '60px' }}
             />
           </div>
           <p className="text-sm">&copy; 2025 Vidwave. All rights reserved.</p>

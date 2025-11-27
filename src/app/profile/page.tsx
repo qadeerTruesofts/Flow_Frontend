@@ -126,15 +126,15 @@ export default function ProfilePage() {
       {/* Premium Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-24">
+          <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center gap-2 group">
               <Image 
                 src="/VidWave-logo.svg" 
                 alt="Vidwave Logo" 
-                width={180} 
+                width={200} 
                 height={60} 
-                className="w-[180px] h-[60px]"
-                style={{ width: '180px', height: '60px' }}
+                className="w-[200px] h-[60px]"
+                style={{ width: '200px', height: '60px' }}
                 priority
               />
             </Link>
