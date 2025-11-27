@@ -268,7 +268,7 @@ export default function Home() {
                 Free Ai Video Generator
                 <br />
                 <span className="text-3xl md:text-5xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                  Turn Text into AI Videos
+                  Turn Text to AI Videos
                 </span>
                 
               </h1>
