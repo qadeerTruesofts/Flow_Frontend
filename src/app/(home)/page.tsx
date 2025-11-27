@@ -300,7 +300,7 @@ export default function Home() {
                       onClick={handleGenerateClick}
                       className="mt-3 sm:mt-0 w-full sm:w-auto sm:absolute sm:right-2 sm:top-1/2 sm:-translate-y-1/2 px-6 sm:px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl font-bold hover:from-blue-700 hover:to-purple-700 transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
                     >
-                      Generate Free →
+                      Generate Free<span className="hidden sm:inline"> →</span>
                     </button>
                   </div>
                 </div>

@@ -2795,6 +2795,10 @@ img, video {
     display: block;
   }
 
+  .sm\:inline {
+    display: inline;
+  }
+
   .sm\:inline-flex {
     display: inline-flex;
   }
