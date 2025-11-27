@@ -30,7 +30,7 @@ const MobileMenu = memo(({ isOpen, onClose, onOpenLogin, isLoggedIn, userEmail, 
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-2">
             <Image 
-              src="/VidWave-trans.png" 
+              src="/VidWave-logo.svg" 
               alt="Vidwave Logo" 
               width={60} 
               height={60} 

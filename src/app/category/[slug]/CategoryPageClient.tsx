@@ -117,12 +117,12 @@ export default function CategoryPageClient({ slug, categoryName, articles: initi
           <div className="flex justify-between items-center h-24">
             <Link href="/" className="flex items-center gap-2 group">
               <Image 
-                src="/VidWave-trans.png" 
+                src="/VidWave-logo.svg" 
                 alt="Vidwave Logo" 
-                width={230} 
-                height={80} 
-                className="w-[230px] h-[80px]"
-                style={{ width: '230px', height: '80px' }}
+                width={180} 
+                height={60} 
+                className="w-[180px] h-[60px]"
+                style={{ width: '180px', height: '60px' }}
                 priority
               />
             </Link>

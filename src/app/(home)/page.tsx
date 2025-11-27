@@ -171,12 +171,12 @@ export default function Home() {
             <div className="flex justify-between items-center h-24">
               <Link href="/" className="flex items-center gap-2 group">
                 <Image 
-                  src="/VidWave-trans.png" 
+                  src="/VidWave-logo.svg" 
                   alt="Vidwave Logo" 
-                  width={230} 
-                  height={80} 
-                  className="w-[230px] h-[80px]"
-                  style={{ width: '230px', height: '80px' }}
+                  width={180} 
+                  height={60} 
+                  className="w-[180px] h-[60px]"
+                  style={{ width: '180px', height: '60px' }}
                   priority
                 />
               </Link>
@@ -551,12 +551,12 @@ export default function Home() {
               <div>
                 <div className="flex items-center gap-2 mb-6">
                   <Image 
-                    src="/VidWave-white-trans.png" 
+                    src="/vidwave-logo-white.svg" 
                     alt="Vidwave Logo" 
-                    width={250} 
-                    height={80} 
-                    className="w-[250px] h-[80px]"
-                    style={{ width: '250px', height: '80px' }}
+                    width={180} 
+                    height={60} 
+                    className="w-[180px] h-[60px]"
+                    style={{ width: '180px', height: '60px' }}
                   />
                 </div>
                 <p className="text-sm leading-relaxed">

@@ -156,12 +156,12 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
           <div className="flex justify-between items-center h-24">
             <Link href="/" className="flex items-center gap-2 group">
               <Image 
-                src="/VidWave-trans.png" 
+                src="/VidWave-logo.svg" 
                 alt="Vidwave Logo" 
-                width={230} 
-                height={80} 
-                className="w-[230px] h-[80px]"
-                style={{ width: '230px', height: '80px' }}
+                width={180} 
+                height={60} 
+                className="w-[180px] h-[60px]"
+                style={{ width: '180px', height: '60px' }}
                 priority
               />
             </Link>
@@ -236,11 +236,15 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
           <aside className="hidden lg:block lg:col-span-3">
             <div className="sticky top-24 space-y-8">
               <div className="bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-8 text-white shadow-2xl">
-                <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="mb-6">
+                  <Image 
+                    src="/VidWave-white-trans.png" 
+                    alt="Vidwave Logo" 
+                    width={180} 
+                    height={60} 
+                    className="w-[180px] h-[60px]"
+                    style={{ width: '180px', height: '60px' }}
+                  />
                 </div>
                 <h3 className="text-2xl font-bold mb-3">Create Your AI Video Now</h3>
                 <p className="text-blue-100 mb-6 text-sm">Turn your ideas into stunning AI videos. No experience needed!</p>
@@ -248,7 +252,7 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
                   href="/generate"
                   className="block w-full py-4 bg-white text-gray-900 rounded-xl font-bold text-center hover:bg-gray-50 transition-all shadow-lg hover:scale-105"
                 >
-                  Generate Free AI Video →
+                  Generate Free AI Video
                 </Link>
                 <div className="mt-4 pt-4 border-t border-white/20">
                   <div className="flex items-center gap-2 text-sm text-blue-100">
@@ -391,10 +395,10 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
                 <Image 
                   src="/VidWave-white-trans.png" 
                   alt="Vidwave Logo" 
-                  width={250} 
-                  height={80} 
-                  className="w-[250px] h-[80px]"
-                  style={{ width: '250px', height: '80px' }}
+                  width={180} 
+                  height={60} 
+                  className="w-[180px] h-[60px]"
+                  style={{ width: '180px', height: '60px' }}
                 />
               </div>
               <p className="text-sm">AI-powered video generation platform</p>
