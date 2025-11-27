@@ -176,10 +176,10 @@ export default function BlogPage() {
               <Image 
                 src="/VidWave-trans.png" 
                 alt="Vidwave Logo" 
-                width={250} 
-                height={70} 
-                className="w-[250px] h-[70px]"
-                style={{ width: '250px', height: '70px' }}
+                width={230} 
+                height={80} 
+                className="w-[230px] h-[80px]"
+                style={{ width: '230px', height: '80px' }}
                 priority
               />
             </Link>
