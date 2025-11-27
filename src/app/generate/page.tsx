@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useSearchParams, useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 
@@ -255,10 +256,17 @@ export default function GeneratePage() {
       {/* Premium Navigation */}
       <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-24">
             <Link href="/" className="flex items-center gap-2 group">
-              <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
-              <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Vidwave</span>
+              <Image 
+                src="/VidWave-trans.png" 
+                alt="Vidwave Logo" 
+                width={250} 
+                height={80} 
+                className="w-[250px] h-[80px]"
+                style={{ width: '250px', height: '80px' }}
+                priority
+              />
             </Link>
             
             {/* Desktop Navigation */}

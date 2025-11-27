@@ -168,10 +168,17 @@ export default function Home() {
         {/* Premium Navigation */}
         <nav className="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-xl border-b border-gray-100">
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
-            <div className="flex justify-between items-center h-16">
+            <div className="flex justify-between items-center h-24">
               <Link href="/" className="flex items-center gap-2 group">
-                <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl transition-shadow" />
-                <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Vidwave</span>
+                <Image 
+                  src="/VidWave-trans.png" 
+                  alt="Vidwave Logo" 
+                  width={250} 
+                  height={80} 
+                  className="w-[250px] h-[80px]"
+                  style={{ width: '250px', height: '80px' }}
+                  priority
+                />
               </Link>
               <div className="hidden md:flex items-center gap-8" suppressHydrationWarning>
                 <Link href="/blogs" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
@@ -543,8 +550,14 @@ export default function Home() {
             <div className="grid md:grid-cols-4 gap-12 mb-12">
               <div>
                 <div className="flex items-center gap-2 mb-6">
-                  <div className="w-9 h-9 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl" />
-                  <span className="text-xl font-bold text-white">Vidwave</span>
+                  <Image 
+                    src="/VidWave-white-trans.png" 
+                    alt="Vidwave Logo" 
+                    width={250} 
+                    height={80} 
+                    className="w-[250px] h-[80px]"
+                    style={{ width: '250px', height: '80px' }}
+                  />
                 </div>
                 <p className="text-sm leading-relaxed">
                   AI-powered text to video generator. Create professional videos in seconds with advanced AI technology.

@@ -803,8 +803,20 @@ video {
 .h-9 {
   height: 2.25rem;
 }
+.h-\[60px\] {
+  height: 60px;
+}
+.h-\[70px\] {
+  height: 70px;
+}
+.h-\[90px\] {
+  height: 90px;
+}
 .h-full {
   height: 100%;
+}
+.h-\[80px\] {
+  height: 80px;
 }
 .max-h-\[90vh\] {
   max-height: 90vh;
@@ -866,11 +878,26 @@ video {
 .w-9 {
   width: 2.25rem;
 }
+.w-\[150px\] {
+  width: 150px;
+}
+.w-\[200px\] {
+  width: 200px;
+}
+.w-\[60px\] {
+  width: 60px;
+}
+.w-\[70px\] {
+  width: 70px;
+}
 .w-full {
   width: 100%;
 }
 .w-px {
   width: 1px;
+}
+.w-\[250px\] {
+  width: 250px;
 }
 .min-w-full {
   min-width: 100%;
@@ -1318,10 +1345,6 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(254 249 195 / var(--tw-bg-opacity, 1));
 }
-.bg-gray-700 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1));
-}
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -1510,9 +1533,6 @@ video {
 }
 .to-emerald-600 {
   --tw-gradient-to: #059669 var(--tw-gradient-to-position);
-}
-.to-gray-700 {
-  --tw-gradient-to: #374151 var(--tw-gradient-to-position);
 }
 .to-gray-800 {
   --tw-gradient-to: #1f2937 var(--tw-gradient-to-position);
@@ -2099,11 +2119,6 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
-.transition-shadow {
-  transition-property: box-shadow;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
 .transition-transform {
   transition-property: transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
@@ -2561,11 +2576,6 @@ img, video {
   background-color: rgb(255 255 255 / 0.2);
 }
 
-.hover\:bg-gray-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:from-blue-700:hover {
   --tw-gradient-from: #1d4ed8 var(--tw-gradient-from-position);
   --tw-gradient-to: rgb(29 78 216 / 0) var(--tw-gradient-to-position);
@@ -2758,12 +2768,6 @@ img, video {
 
 .group:hover .group-hover\:opacity-30 {
   opacity: 0.3;
-}
-
-.group:hover .group-hover\:shadow-xl {
-  --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
 @media (min-width: 640px) {

@@ -2,6 +2,7 @@
 
 import { memo } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 interface MobileMenuProps {
   isOpen: boolean
@@ -28,8 +29,14 @@ const MobileMenu = memo(({ isOpen, onClose, onOpenLogin, isLoggedIn, userEmail, 
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-lg" />
-            <span className="text-lg font-bold text-gray-900">Vidwave</span>
+            <Image 
+              src="/VidWave-trans.png" 
+              alt="Vidwave Logo" 
+              width={60} 
+              height={60} 
+              className="w-[60px] h-[60px]"
+              style={{ width: '60px', height: '60px' }}
+            />
           </div>
           <button
             onClick={onClose}

@@ -1,6 +1,7 @@
 'use client'
 
 import { memo } from 'react'
+import Image from 'next/image'
 
 interface LoginPopupProps {
   isOpen: boolean
@@ -51,8 +52,14 @@ const LoginPopup = memo(({ isOpen, onClose }: LoginPopupProps) => {
         <div className="p-8 pt-12 text-center">
           {/* Logo */}
           <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-xl shadow-lg" />
-            <span className="text-2xl font-bold text-white">Vidwave</span>
+            <Image 
+              src="/VidWave-white-trans.png" 
+              alt="Vidwave Logo" 
+              width={250} 
+              height={80} 
+              className="w-[250px] h-[80px]"
+              style={{ width: '250px', height: '80px' }}
+            />
           </div>
 
           {/* Title */}
