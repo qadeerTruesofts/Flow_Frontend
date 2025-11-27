@@ -213,7 +213,7 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
         </div>
       </nav>
 
-      <div className="pt-20 pb-6 px-6 bg-gray-50 border-b border-gray-200">
+      <div className="pt-24 pb-6 px-6 bg-gray-50 border-b border-gray-200">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Link href="/" className="hover:text-gray-900">
@@ -341,7 +341,7 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
               <h3 className="text-2xl font-bold mb-3">Ready to Create Your AI Video?</h3>
               <p className="text-blue-100 mb-6">Turn your ideas into stunning AI videos</p>
               <Link href="/generate" className="block w-full py-4 bg-white text-gray-900 rounded-xl font-bold text-center hover:bg-gray-50 transition-all">
-                Generate Free AI Video →
+                Generate Free AI Video
               </Link>
             </div>
           </article>
@@ -350,7 +350,7 @@ export default function ArticlePageClient({ article, relatedArticles }: ArticleP
 
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-4 shadow-2xl">
         <Link href="/generate" className="block w-full py-3 bg-white text-gray-900 rounded-xl font-bold text-center hover:bg-gray-50 transition-all">
-          Generate Free AI Video →
+          Generate Free AI Video
         </Link>
       </div>
 
