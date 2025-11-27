@@ -78,10 +78,10 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/vidwave-icon.png', sizes: 'any', type: 'image/png' },
+      { url: '/favicon.png', sizes: 'any', type: 'image/png' },
     ],
     apple: [
-      { url: '/vidwave-icon.png', sizes: '180x180', type: 'image/png' },
+      { url: '/favicon.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   manifest: '/site.webmanifest',
@@ -124,6 +124,8 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://images.unsplash.com" />
         {/* Preload critical resources for LCP */}
         <link rel="preload" href="/A_serene_sunset.mp4" as="video" type="video/mp4" />
+        {/* Favicon */}
+        <link rel="icon" type="image/png" href="/favicon.png" />
       </head>
       <body className={inter.className}>
         {children}
