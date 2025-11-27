@@ -265,7 +265,7 @@ export default function Home() {
             {/* Premium Headline */}
             <div className="text-center mb-12">
               <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-[1.1] tracking-tight">
-                Free Ai Video Generator
+                Free <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">Ai</span> Video Generator
                 <br />
                 <span className="text-3xl md:text-5xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
                   Turn Text into AI Videos
