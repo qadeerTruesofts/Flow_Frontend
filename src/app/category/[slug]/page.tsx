@@ -37,10 +37,10 @@ async function getCategoryData(slug: string) {
     }
     
     const data = await response.json()
-    const allArticles = data.articles || []
+    const allArticles: Article[] = data.articles || []
     
     // Get all unique categories from articles
-    const allCategories = Array.from(new Set(allArticles.map((article: Article) => article.category).filter(Boolean)))
+    const allCategories = Array.from(new Set(allArticles.map((article: Article) => article.category).filter((cat): cat is string => Boolean(cat))))
     const categorySlugs = allCategories.map(cat => slugify(cat))
     
     // Check if the requested category slug exists
