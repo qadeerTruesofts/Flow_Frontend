@@ -174,9 +174,9 @@ export default function Home() {
                   src="/VidWave-trans.png" 
                   alt="Vidwave Logo" 
                   width={250} 
-                  height={80} 
-                  className="w-[250px] h-[80px]"
-                  style={{ width: '250px', height: '80px' }}
+                  height={70} 
+                  className="w-[250px] h-[70px]"
+                  style={{ width: '250px', height: '70px' }}
                   priority
                 />
               </Link>

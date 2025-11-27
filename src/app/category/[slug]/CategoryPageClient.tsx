@@ -119,10 +119,10 @@ export default function CategoryPageClient({ slug, categoryName, articles: initi
               <Image 
                 src="/VidWave-trans.png" 
                 alt="Vidwave Logo" 
-                width={150} 
-                height={90} 
-                className="w-[150px] h-[90px]"
-                style={{ width: '150px', height: '90px' }}
+                width={250} 
+                height={70} 
+                className="w-[250px] h-[70px]"
+                style={{ width: '250px', height: '70px' }}
                 priority
               />
             </Link>
